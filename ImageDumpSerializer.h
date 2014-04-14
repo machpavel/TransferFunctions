@@ -3,7 +3,6 @@
 
 #include "itkImportImageFilter.h"
 
-#include "CustomItkImage.h"
 #include "Constants.h"
 #include "FileReader.h"
 #include "FileWriter.h"
@@ -14,14 +13,15 @@ template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension
 class ImageDumpSerializer : public ImageDumpBase
 {
 public:
-  typedef CustomItkImage<PixelType, Dimension> ImageType;
+  typedef itk::Image<PixelType, Dimension> ImageType;
+  typedef typename ImageType::ConstPointer ImageConstPointer;
   typedef itk::ImportImageFilter<PixelType, Dimension> ImageFilterType;
 
   ImageDumpSerializer(std::string & filename) : writer(FileWriter(filename))
   {
   }
 
-  void SerializeImage(itk::Image<PixelType, Dimension> * exporter)
+  void SerializeImage(ImageConstPointer exporter)
   {
     this->SerializeHeader();
 

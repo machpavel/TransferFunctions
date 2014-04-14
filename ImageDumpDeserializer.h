@@ -3,7 +3,6 @@
 
 #include "itkImportImageFilter.h"
 
-#include "CustomItkImage.h"
 #include "Constants.h"
 #include "FileReader.h"
 #include "ImageDumpBase.h"
@@ -13,7 +12,7 @@ template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension
 class ImageDumpDeserializer : public ImageDumpBase
 {
 public:
-  typedef CustomItkImage<PixelType, Dimension> ImageType;
+  typedef itk::Image<PixelType, Dimension> ImageType;
   typedef itk::ImportImageFilter<PixelType, Dimension> ImageFilterType;
 
   ImageDumpDeserializer(std::string & filename) : reader(FileReader(filename))

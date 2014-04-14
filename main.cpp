@@ -10,11 +10,12 @@ int main(int argc, char * argv[])
 {
   typedef Constants::GlobalPixelType PixelType;
   const unsigned int Dimension = 3;
+  typedef itk::Image<PixelType, Dimension> ImageType;
   typedef itk::ImportImageFilter< PixelType, Dimension >   ImportFilterType;
 
 
   ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(std::string(argv[1]));
-  CustomItkImage<>::Pointer image = deserializer->DeserializeImage();
+  ImageType::ConstPointer image = deserializer->DeserializeImage();
 
   
   ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(std::string(argv[2]));
