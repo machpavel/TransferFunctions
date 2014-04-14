@@ -5,6 +5,7 @@
 
 #include "ImageDumpDeserializer.h"
 #include "ImageDumpSerializer.h"
+#include "ItkImageFilter.h"
 
 int main(int argc, char * argv[])
 {
@@ -17,7 +18,8 @@ int main(int argc, char * argv[])
   ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(std::string(argv[1]));
   ImageType::ConstPointer image = deserializer->DeserializeImage();
 
-  
+  ItkImageFilter<PixelType, Dimension> filter(image);
+
   ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(std::string(argv[2]));
   serializer->SetMinimums(deserializer->GetMinimums());
   serializer->SetMaximums(deserializer->GetMaximums());
@@ -25,7 +27,7 @@ int main(int argc, char * argv[])
   serializer->SetDatasetType(deserializer->GetDatasetType());
   serializer->SetElementTypeID(deserializer->GetElementTypeID());
 
-  serializer->SerializeImage(image.GetPointer());
+  serializer->SerializeImage(filter.GetGradientFilterImage());
 
   delete deserializer;
   delete serializer;
