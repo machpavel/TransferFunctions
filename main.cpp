@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "itkImage.h"
 #include "itkImportImageFilter.h"
 
@@ -7,8 +9,21 @@
 #include "ImageDumpSerializer.h"
 #include "ItkImageFilter.h"
 
+void PrintUsage()
+{
+  std::cout << "..:: Usage ::.." << std::endl;
+  std::cout << "First parameter: input filename" << std::endl;
+  std::cout << "Second parameter: output filename" << std::endl;
+}
+
 int main(int argc, char * argv[])
 {
+  if (argc != 2)
+  {
+    PrintUsage();
+    return EXIT_SUCCESS;
+  }
+
   typedef Constants::GlobalPixelType PixelType;
   const unsigned int Dimension = 3;
   typedef itk::Image<PixelType, Dimension> ImageType;
