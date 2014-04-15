@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
   serializer->SetDatasetType(deserializer->GetDatasetType());
   serializer->SetElementTypeID(deserializer->GetElementTypeID());
 
-  serializer->SerializeImage(filter.GetHessianRecursiveGaussianFilterImage(5));
+  serializer->SerializeImage(filter.GetHessianToVesselnessFilterImage(5, 1, 2));
 
   delete deserializer;
   delete serializer;
