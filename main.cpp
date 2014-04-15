@@ -18,7 +18,7 @@ void PrintUsage()
 
 int main(int argc, char * argv[])
 {
-  if (argc != 2)
+  if (argc != 3)
   {
     PrintUsage();
     return EXIT_SUCCESS;
@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
   serializer->SetDatasetType(deserializer->GetDatasetType());
   serializer->SetElementTypeID(deserializer->GetElementTypeID());
 
-  serializer->SerializeImage(filter.GetGradientFilterImage());
+  serializer->SerializeImage(filter.GetHessianRecursiveGaussianFilterImage(5));
 
   delete deserializer;
   delete serializer;
