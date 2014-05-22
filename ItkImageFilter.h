@@ -30,7 +30,7 @@ public:
     return gradientFilter->GetOutput();
   }
 
-  ImageConstPointer GetHessianRecursiveGaussianFilterImage(double sigma)
+  ImageConstPointer GetHessianRecursiveGaussianFilterImage(double sigma) const
   {
     HessianFilterType::Pointer hessianFilter = HessianFilterType::New();
     hessianFilter->SetInput(this->image.GetPointer());
