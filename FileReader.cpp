@@ -1,6 +1,6 @@
 #include "FileReader.h"
 
-FileReader::FileReader(std::string & filename) : reader(std::ifstream(filename, std::ifstream::binary))
+FileReader::FileReader(const std::string & filename) : reader(std::ifstream(filename, std::ifstream::binary))
 {
   this->Init();
 }

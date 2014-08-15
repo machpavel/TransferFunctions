@@ -1,6 +1,6 @@
 #include "FileWriter.h"
 
-FileWriter::FileWriter(std::string & filename) : writer(std::ofstream(filename, std::ifstream::binary))
+FileWriter::FileWriter(const std::string & filename) : writer(std::ofstream(filename, std::ifstream::binary))
 {
   this->Init();
 }

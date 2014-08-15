@@ -6,7 +6,7 @@
 class FileWriter
 {
 public:
-  FileWriter(std::string & filename);
+  FileWriter(const std::string & filename);
 
   ~FileWriter();
 

@@ -15,7 +15,7 @@ public:
   typedef itk::Image<PixelType, Dimension> ImageType;
   typedef itk::ImportImageFilter<PixelType, Dimension> ImageFilterType;
 
-  ImageDumpDeserializer(std::string & filename) : reader(FileReader(filename))
+  ImageDumpDeserializer(const std::string & filename) : reader(FileReader(filename))
   {
   }
 

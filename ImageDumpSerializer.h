@@ -17,7 +17,7 @@ public:
   typedef typename ImageType::ConstPointer ImageConstPointer;
   typedef itk::ImportImageFilter<PixelType, Dimension> ImageFilterType;
 
-  ImageDumpSerializer(std::string & filename) : writer(FileWriter(filename))
+  ImageDumpSerializer(const std::string & filename) : writer(FileWriter(filename))
   {
   }
 

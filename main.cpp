@@ -42,12 +42,12 @@ int main(int argc, char * argv[])
     typedef itk::ImportImageFilter< PixelType, Dimension >   ImportFilterType;
 
 
-    ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(std::string(argv[1]));
+    ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
     ImageType::ConstPointer image = deserializer->DeserializeImage();
 
     ItkImageFilter<PixelType, Dimension> filter(image);
 
-    ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(std::string(argv[2]));
+    ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
     serializer->SetMinimums(deserializer->GetMinimums());
     serializer->SetMaximums(deserializer->GetMaximums());
     serializer->SetElementExtents(deserializer->GetElementExtents());

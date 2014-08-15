@@ -6,7 +6,7 @@
 class FileReader
 {
 public:
-  FileReader(std::string & filename);
+  FileReader(const std::string & filename);
 
   ~FileReader();
 
