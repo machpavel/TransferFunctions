@@ -9,16 +9,17 @@
 #include "ImageDumpDeserializer.h"
 #include "ImageDumpSerializer.h"
 #include "ItkImageFilter.h"
+#include "Filters/FilterDecision.h"
 
 int main(int argc, char * argv[])
 {
   // Declare the supported options.
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()
-      ("help", "produce help message")
-      ("input", boost::program_options::value<std::string>(), "input filename")
-      ("output", boost::program_options::value<std::string>(), "output filename")
-  ;
+    ("help", "produce help message")
+    ("input", boost::program_options::value<std::string>(), "input filename")
+    ("output", boost::program_options::value<std::string>(), "output filename")
+    ;
 
   boost::program_options::variables_map vm;
   boost::program_options::positional_options_description p;
@@ -30,8 +31,8 @@ int main(int argc, char * argv[])
   boost::program_options::notify(vm);    
 
   if (vm.count("help")) {
-      std::cout << desc << "\n";
-      return 1;
+    std::cout << desc << "\n";
+    return 1;
   }
 
   if (vm.count("input") && vm.count("output"))
@@ -45,7 +46,33 @@ int main(int argc, char * argv[])
     ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
     ImageType::ConstPointer image = deserializer->DeserializeImage();
 
-    ItkImageFilter<PixelType, Dimension> filter(image);
+    ItkImageFilter<PixelType, Dimension>* filter = nullptr;
+
+    std::string read;
+
+    do
+    {
+      std::cout << "enter filter name or type \"exit\"" << std::endl;
+      std::getline(std::cin, read);
+
+      if (read != "exit")
+      {
+        filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image);
+
+        if (filter != nullptr)
+        {
+          std::cout << "using " << filter->GetFilterName() << " filter" << std::endl;
+          image = filter->GetFilterImage();
+        }
+        else
+        {
+          std::cout << "given wrong filter name; possible values are:" << std::endl;
+          FilterDecision<PixelType, Dimension>::PrintFilterNames();
+        }
+      }
+    } while (read != "exit");
+
+    delete filter;
 
     ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
     serializer->SetMinimums(deserializer->GetMinimums());
@@ -54,7 +81,7 @@ int main(int argc, char * argv[])
     serializer->SetDatasetType(deserializer->GetDatasetType());
     serializer->SetElementTypeID(deserializer->GetElementTypeID());
 
-    serializer->SerializeImage(filter.GetGradientFilterImage());
+    serializer->SerializeImage(image);
 
     delete deserializer;
     delete serializer;
