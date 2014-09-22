@@ -5,41 +5,20 @@
 #include "../Constants.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
-class ItkHessianToVesselnessFilter : public ItkImageFilter<Constants::GlobalPixelType, Dimension>
+
+class ItkHessianToVesselnessFilter :
+  public ItkImageFilter<Constants::GlobalPixelType, Dimension>
 {
 public:
-  typedef itk::Image<itk::SymmetricSecondRankTensor< double, 3 >, 3> HessianOutputType;
+  typedef itk::SymmetricSecondRankTensor< double, 3 > TensorType;
+  typedef itk::Image<TensorType, 3> HessianOutputType;
   typedef itk::HessianRecursiveGaussianImageFilter<typename ItkImageFilter::ImageType, HessianOutputType> HessianFilterType;
   typedef itk::Hessian3DToVesselnessMeasureImageFilter<PixelType> VesselnessMeasureFilterType;
-
 
   ItkHessianToVesselnessFilter(typename ItkImageFilter::ImageConstPointer image) : ItkImageFilter(image)
   {
   }
-
-
-  HessianOutputType::ConstPointer GetHessianRecursiveGaussianFilterImage(double sigma)
-  {
-    HessianFilterType::Pointer hessianFilter = HessianFilterType::New();
-    hessianFilter->SetInput(this->image.GetPointer());
-    hessianFilter->SetSigma(sigma);
-    hessianFilter->Update();
-
-    return hessianFilter->GetOutput();
-  }
-
-  typename ItkImageFilter::ImageConstPointer GetHessianToVesselnessFilterImage(double hessianSigma, double alpha1, double alpha2)
-  {
-    VesselnessMeasureFilterType::Pointer vesselnessFilter = VesselnessMeasureFilterType::New();
-
-    vesselnessFilter->SetInput(this->GetHessianRecursiveGaussianFilterImage(hessianSigma));
-    vesselnessFilter->SetAlpha1(alpha1);
-    vesselnessFilter->SetAlpha2(alpha2);
-    vesselnessFilter->Update();
-
-    return vesselnessFilter->GetOutput();
-  }
-
+  
   typename ItkImageFilter::ImageConstPointer GetHessianToVesselnessFilterImage()
   {
     double hessianSigma = 0;
@@ -70,6 +49,32 @@ public:
   virtual std::string GetFilterName() override
   {
     return "HessianToVesselness";
+  }
+
+private:
+
+  HessianOutputType::ConstPointer GetHessianRecursiveGaussianFilterImage(double sigma)
+  {
+    HessianFilterType::Pointer hessianFilter = HessianFilterType::New();
+    hessianFilter->SetInput(this->image.GetPointer());
+    hessianFilter->SetSigma(sigma);
+    hessianFilter->Update();    
+
+    return hessianFilter->GetOutput();
+  }
+
+  typename ItkImageFilter::ImageConstPointer GetHessianToVesselnessFilterImage(double hessianSigma, double alpha1, double alpha2)
+  {
+    VesselnessMeasureFilterType::Pointer vesselnessFilter = VesselnessMeasureFilterType::New();
+
+    HessianOutputType::ConstPointer hessianOutput = this->GetHessianRecursiveGaussianFilterImage(hessianSigma);
+
+    vesselnessFilter->SetInput(hessianOutput);
+    vesselnessFilter->SetAlpha1(alpha1);
+    vesselnessFilter->SetAlpha2(alpha2);
+    vesselnessFilter->Update();
+
+    return vesselnessFilter->GetOutput();
   }
 };
 

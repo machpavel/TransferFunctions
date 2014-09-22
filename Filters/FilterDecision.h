@@ -4,6 +4,7 @@
 #include "../ItkImageFilter.h"
 #include "ItkGradientFilter.h"
 #include "ItkHessianToVesselnessFilter.h"
+#include "ItkEigenValuesFilter.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
 class FilterDecision
@@ -22,6 +23,10 @@ public:
     {
       return new ItkHessianToVesselnessFilter<PixelType, Dimension>(image);
     }
+    else if (filterName == "hessian to eigenvalues")
+    {
+      return new ItkEigenValuesFilter<PixelType, Dimension>(image);
+    }
     else
     {
       return nullptr;
@@ -33,6 +38,7 @@ public:
   {
     std::cout << "gradient" << std::endl;
     std::cout << "hessian to vesselness" << std::endl;
+    std::cout << "hessian to eigenvalues" << std::endl;
   }
 };
 
