@@ -46,6 +46,13 @@ int main(int argc, char * argv[])
     ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
     ImageType::ConstPointer image = deserializer->DeserializeImage();
 
+    ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
+    serializer->SetMinimums(deserializer->GetMinimums());
+    serializer->SetMaximums(deserializer->GetMaximums());
+    serializer->SetElementExtents(deserializer->GetElementExtents());
+    serializer->SetDatasetType(deserializer->GetDatasetType());
+    serializer->SetElementTypeID(deserializer->GetElementTypeID());
+
     ItkImageFilter<PixelType, Dimension>* filter = nullptr;
 
     std::string read;
@@ -57,7 +64,7 @@ int main(int argc, char * argv[])
 
       if (read != "exit")
       {
-        filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image);
+        filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image, serializer);
 
         if (filter != nullptr)
         {
@@ -73,13 +80,6 @@ int main(int argc, char * argv[])
     } while (read != "exit");
 
     delete filter;
-
-    ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
-    serializer->SetMinimums(deserializer->GetMinimums());
-    serializer->SetMaximums(deserializer->GetMaximums());
-    serializer->SetElementExtents(deserializer->GetElementExtents());
-    serializer->SetDatasetType(deserializer->GetDatasetType());
-    serializer->SetElementTypeID(deserializer->GetElementTypeID());
 
     serializer->SerializeImage(image);
 

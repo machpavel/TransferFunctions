@@ -7,6 +7,8 @@ class FileWriter
 {
 public:
   FileWriter(const std::string & filename);
+  void CloseFile();
+  void ReopenFile();
 
   ~FileWriter();
 
@@ -25,6 +27,7 @@ public:
 private:
   void Init();
 
+  std::string filename;
   std::ofstream writer;
 };
 

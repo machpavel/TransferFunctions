@@ -13,6 +13,7 @@ class ItkImageFilter
 public:
   typedef itk::Image<PixelType, Dimension> ImageType;
   typedef typename ImageType::ConstPointer ImageConstPointer;
+  typedef typename ImageType::Pointer ImagePointer;
 
   ItkImageFilter(ImageConstPointer image) : image(image)
   {

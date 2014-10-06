@@ -5,6 +5,7 @@
 #include "ItkGradientFilter.h"
 #include "ItkHessianToVesselnessFilter.h"
 #include "ItkEigenValuesFilter.h"
+#include "../ImageDumpSerializer.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
 class FilterDecision
@@ -13,7 +14,7 @@ public:
 
   typedef ItkImageFilter<PixelType, Dimension> ItkImageFilterType;
 
-  static ItkImageFilterType* GetFilter(const std::string& filterName, typename ItkImageFilter<PixelType, Dimension>::ImageConstPointer image)
+  static ItkImageFilterType* GetFilter(const std::string& filterName, typename ItkImageFilter<PixelType, Dimension>::ImageConstPointer image, ImageDumpSerializer<>* serializer)
   {
     if (filterName == "gradient")
     {
@@ -25,7 +26,7 @@ public:
     }
     else if (filterName == "hessian to eigenvalues")
     {
-      return new ItkEigenValuesFilter<PixelType, Dimension>(image);
+      return new ItkEigenValuesFilter<PixelType, Dimension>(image, serializer);
     }
     else
     {

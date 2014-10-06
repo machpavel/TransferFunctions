@@ -61,6 +61,10 @@ public:
     importer->SetImportPointer(pixelData, numberOfPixels, importFilterWillDeleteTheInputBuffer);
 
     importer->Update();
+
+    std::cout << "image loaded, size: " << size[0] << "x" << size[1] << "x" << size[2] <<
+      "; " << numberOfPixels * sizeof(PixelType) <<  "B (" << numberOfPixels * sizeof(PixelType) / (1024 * 1024) << " MB)" << std::endl;
+
     return importer->GetOutput();
   }
 

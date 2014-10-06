@@ -15,6 +15,7 @@ class ImageDumpSerializer : public ImageDumpBase
 public:
   typedef itk::Image<PixelType, Dimension> ImageType;
   typedef typename ImageType::ConstPointer ImageConstPointer;
+  typedef typename ImageType::Pointer ImagePointer;
   typedef itk::ImportImageFilter<PixelType, Dimension> ImageFilterType;
 
   ImageDumpSerializer(const std::string & filename) : writer(FileWriter(filename))
@@ -49,6 +50,46 @@ public:
     }
 
     this->writer.Write<unsigned int>(Constants::DUMP_END_MAGIC_NUMBER);
+  }
+
+  void SerializeImage(ImagePointer exporter)
+  {
+    this->SerializeHeader();
+
+
+    // TODO: Rewrite as a single write operation
+
+    size_t width = this->maximums[0] - this->minimums[0];
+    size_t height = this->maximums[1] - this->minimums[1];
+    size_t depth = this->maximums[2] - this->minimums[2];
+
+    for (size_t z = 0; z < depth; ++z)
+    {
+      for (size_t y = 0; y < height; ++y)
+      {
+        for (size_t x = 0; x < width; ++x)
+        {
+          itk::Image<PixelType, Dimension>::IndexType index;
+          index[0] = x;
+          index[1] = y; 
+          index[2] = z;
+
+          this->writer.Write<PixelType>(exporter->GetPixel(index));
+        }
+      }
+    }
+
+    this->writer.Write<unsigned int>(Constants::DUMP_END_MAGIC_NUMBER);
+  }
+
+  void CloseFile()
+  {
+    this->writer.CloseFile();
+  }
+
+  void ReopenFile()
+  {
+    this->writer.ReopenFile();
   }
 
 private:
