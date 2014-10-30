@@ -73,8 +73,8 @@ public:
 
       itk::ImageRegionIterator<ImageType> outputImageIterator(outputImage, outputImage->GetRequestedRegion());
       EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
-      eigenValuesIterator = eigenValuesIterator.Begin();
-      for (outputImageIterator = outputImageIterator.Begin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
+      eigenValuesIterator.GoToBegin();
+      for (outputImageIterator.GoToBegin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
       {
         EigenValuesType eigenValues = eigenValuesIterator.Get();
         outputImageIterator.Set(this->lambda1 * eigenValues[0] + this->lambda2 * eigenValues[1] + this->lambda3 * eigenValues[2]);
@@ -174,7 +174,7 @@ private:
     EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
     //EigenVectorsCollectionIteratorType eigenVectorsIterator(this->eigenVectorsPerVoxel, this->eigenVectorsPerVoxel->GetRequestedRegion());
     //for (it = it.Begin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator, ++eigenVectorsIterator)
-    for (it = it.Begin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator)
+    for (it.GoToBegin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator)
     {
       //eigenAnalysis.ComputeEigenValuesAndVectors(it.Value(), eigenValuesIterator.Get(), eigenVectorsIterator.Get());
       EigenValuesType eigenvalues;

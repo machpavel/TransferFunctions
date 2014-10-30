@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D0E7BBFC-75ED-42E0-9B70-DD8B1F60CFC3}</ProjectGuid>
+    <RootNamespace>TransferFuctions</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Programming\Libraries\Boost64\include\boost-1_56\;C:\Programming\Libraries\InsightToolkit\Bin\include\ITK-4.6;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Programming\Libraries\InsightToolkit\Bin\lib;C:\Programming\Libraries\Boost64\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Programming\Libraries\Boost64\include\boost-1_56\;C:\Programming\Libraries\InsightToolkit\Bin\include\ITK-4.6;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Programming\Libraries\InsightToolkit\Bin\lib;C:\Programming\Libraries\Boost64\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ITKBiasCorrection-4.6.lib;ITKBioCell-4.6.lib;ITKCommon-4.6.lib;ITKDICOMParser-4.6.lib;itkdouble-conversion-4.6.lib;ITKEXPAT-4.6.lib;ITKFEM-4.6.lib;itkgdcmCommon-4.6.lib;itkgdcmDICT-4.6.lib;itkgdcmDSED-4.6.lib;itkgdcmIOD-4.6.lib;itkgdcmjpeg12-4.6.lib;itkgdcmjpeg16-4.6.lib;itkgdcmjpeg8-4.6.lib;itkgdcmMSFF-4.6.lib;ITKgiftiio-4.6.lib;itkhdf5_cpp-4.6.lib;itkhdf5-4.6.lib;ITKIOBioRad-4.6.lib;ITKIOBMP-4.6.lib;ITKIOCSV-4.6.lib;ITKIOGDCM-4.6.lib;ITKIOGE-4.6.lib;ITKIOGIPL-4.6.lib;ITKIOHDF5-4.6.lib;ITKIOImageBase-4.6.lib;ITKIOIPL-4.6.lib;ITKIOJPEG-4.6.lib;ITKIOLSM-4.6.lib;ITKIOMesh-4.6.lib;ITKIOMeta-4.6.lib;ITKIOMRC-4.6.lib;ITKIONIFTI-4.6.lib;ITKIONRRD-4.6.lib;ITKIOPNG-4.6.lib;ITKIOSiemens-4.6.lib;ITKIOSpatialObjects-4.6.lib;ITKIOStimulate-4.6.lib;ITKIOTIFF-4.6.lib;ITKIOTransformBase-4.6.lib;ITKIOTransformHDF5-4.6.lib;ITKIOTransformInsightLegacy-4.6.lib;ITKIOTransformMatlab-4.6.lib;ITKIOVTK-4.6.lib;ITKIOXML-4.6.lib;itkjpeg-4.6.lib;ITKKLMRegionGrowing-4.6.lib;ITKLabelMap-4.6.lib;ITKMesh-4.6.lib;ITKMetaIO-4.6.lib;itkNetlibSlatec-4.6.lib;ITKniftiio-4.6.lib;ITKNrrdIO-4.6.lib;itkopenjpeg-4.6.lib;ITKOptimizers-4.6.lib;ITKOptimizersv4-4.6.lib;ITKPath-4.6.lib;itkpng-4.6.lib;ITKPolynomials-4.6.lib;ITKQuadEdgeMesh-4.6.lib;ITKSpatialObjects-4.6.lib;ITKStatistics-4.6.lib;itksys-4.6.lib;itktiff-4.6.lib;itkv3p_lsqr-4.6.lib;itkv3p_netlib-4.6.lib;itkvcl-4.6.lib;ITKVideoCore-4.6.lib;ITKVideoIO-4.6.lib;itkvnl_algo-4.6.lib;itkvnl-4.6.lib;ITKVNLInstantiation-4.6.lib;ITKVTK-4.6.lib;ITKWatersheds-4.6.lib;itkzlib-4.6.lib;ITKznz-4.6.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="FileReader.h" />
+    <ClInclude Include="FileWriter.h" />
+    <ClInclude Include="ImageDumpBase.h" />
+    <ClInclude Include="ImageDumpDeserializer.h" />
+    <ClInclude Include="ImageDumpSerializer.h" />
+    <ClInclude Include="ItkImageFilter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FileReader.cpp" />
+    <ClCompile Include="FileWriter.cpp" />
+    <ClCompile Include="ImageDumpBase.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
