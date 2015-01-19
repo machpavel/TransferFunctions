@@ -15,16 +15,16 @@ public:
   typedef typename ImageType::ConstPointer ImageConstPointer;
   typedef typename ImageType::Pointer ImagePointer;
 
-  ItkImageFilter(ImageConstPointer image) : image(image)
+  ItkImageFilter(ImagePointer image) : image(image)
   {
   }
 
-  virtual ImageConstPointer GetFilterImage() = 0;
+  virtual ImagePointer GetFilterImage() = 0;
 
   virtual std::string GetFilterName() = 0;
 
 protected:
-  ImageConstPointer image;
+  ImagePointer image;
 };
 
 

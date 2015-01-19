@@ -1,14 +1,12 @@
-#ifndef FILTERS_ITK_EIGEN_VALUES_FILTER_H_
-#define FILTERS_ITK_EIGEN_VALUES_FILTER_H_
+#ifndef FILTERS_ITK_EIGEN_VALUES_RAW_H_
+#define FILTERS_ITK_EIGEN_VALUES_RAW_H_
 
 #include "../ItkImageFilter.h"
 #include "../Constants.h"
 #include "../ImageDumpSerializer.h"
 
-#include <itkImageDuplicator.h>
-
-template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
-class ItkEigenValuesFilter :
+template<typename PixelType = unsigned int, unsigned int Dimension = 3>
+class ItkEigenValuesRaw :
   public ItkImageFilter<Constants::GlobalPixelType, Dimension>
 {
 public:
@@ -20,23 +18,30 @@ public:
   typedef itk::ImageRegionConstIterator<HessianOutputType>  HessianIteratorType;
 
   typedef itk::Vector<double, Dimension> EigenValuesType;
-  typedef itk::Matrix<double, Dimension, Dimension> EigenVectorsType;
   typedef itk::Image<EigenValuesType, Dimension> EigenValuesCollectionType;
-  //typedef itk::Image<EigenVectorsType, Dimension> EigenVectorsCollectionType;
 
   typedef itk::ImageRegionIterator<EigenValuesCollectionType> EigenValuesCollectionIteratorType;
-  //typedef itk::ImageRegionIterator<EigenVectorsCollectionType> EigenVectorsCollectionIteratorType;
 
   typedef itk::ImportImageFilter<EigenValuesType, Dimension> EigenValuesImportFilterType;
 
+  static const int ELEMENT_ID_VECTOR_3_DOUBLE = 58;
 
-  ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, ImageDumpSerializer<>* serializer) : ItkImageFilter(image),
-    lambda1(0), lambda2(0), lambda3(0), serializer(serializer)
+
+  ItkEigenValuesRaw(typename ItkImageFilter::ImagePointer image, ImageDumpSerializer<>* serializer) : ItkImageFilter(image), serializer(serializer->GetFilename())
   {
     this->InitializeEigenvalues();
+
+    this->serializer.SetMinimums(serializer->GetMinimums());
+    this->serializer.SetMaximums(serializer->GetMaximums());
+    this->serializer.SetElementExtents(serializer->GetElementExtents());
+
+    // what is the dataset type?
+    this->serializer.SetDatasetType(serializer->GetDatasetType());
+
+    this->serializer.SetElementTypeID(ItkEigenValuesRaw::ELEMENT_ID_VECTOR_3_DOUBLE);
   }
 
-  typename ItkImageFilter::ImagePointer GetEigenValuesFilterImage()
+  typename ItkEigenValuesRaw::ImagePointer GetEigenValuesFilterImage()
   {
     double hessianSigma = 0;
 
@@ -46,57 +51,16 @@ public:
 
     HessianOutputType::Pointer hessianOutput = this->GetHessianRecursiveGaussianFilterImage(hessianSigma);
 
-    typedef itk::ImageDuplicator<ImageType> DuplicatorType;
-    DuplicatorType::Pointer duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(this->image);
-    duplicator->Update();
-    ImageType::Pointer outputImage = duplicator->GetModifiableOutput();
-
     std::cout << "computing eigenvalues at each point" << std::endl;
     this->LoadEigenVectors(hessianOutput);
 
-    std::string read;
+    this->serializer.SerializeImage(this->eigenValuesPerVoxel);
+    this->serializer.CloseFile();
 
-    do
-    {
-      std::cout << "enter linear combination coeficients for the eigenvectors components" << std::endl;
-
-      std::cout << "lambda1 coeficient: ";
-      std::cin >> lambda1;
-
-      std::cout << "lambda2 coeficient: ";
-      std::cin >> lambda2;
-
-      std::cout << "lambda3 coeficient: ";
-      std::cin >> lambda3;
-      std::cout << std::endl;
-
-      itk::ImageRegionIterator<ImageType> outputImageIterator(outputImage, outputImage->GetRequestedRegion());
-      EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
-      eigenValuesIterator.GoToBegin();
-      for (outputImageIterator.GoToBegin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
-      {
-        EigenValuesType eigenValues = eigenValuesIterator.Get();
-        outputImageIterator.Set(this->lambda1 * eigenValues[0] + this->lambda2 * eigenValues[1] + this->lambda3 * eigenValues[2]);
-      }
-
-      std::cout << "image computed, saving" << std::endl;
-
-      this->serializer->SerializeImage(outputImage);
-      this->serializer->CloseFile();
-
-      std::cout << "continue with different coefficients? (yes/no)" << std:: endl;
-
-      std::cin >> read;
-    }
-    while (read != "no");
-
-    this->serializer->ReopenFile();
-
-    return outputImage;
+    return this->image;
   }
 
-  virtual ~ItkEigenValuesFilter()
+  virtual ~ItkEigenValuesRaw()
   {
   }
 
@@ -107,7 +71,7 @@ public:
 
   virtual std::string GetFilterName() override
   {
-    return "EigenValuesOfHessianMatrixFilter";
+    return "EigenValuesOfHessianMatrixRaw";
   }
 
 private:
@@ -116,7 +80,7 @@ private:
     HessianFilterType::Pointer hessianFilter = HessianFilterType::New();
     hessianFilter->SetInput(this->image.GetPointer());
     hessianFilter->SetSigma(sigma);
-    hessianFilter->Update();    
+    hessianFilter->Update();
 
     HessianOutputType::Pointer output = hessianFilter->GetOutput();
     return output;
@@ -142,20 +106,20 @@ private:
     region.SetIndex(start);
     importer->SetRegion(region);
 
-    double origin[ Dimension ];
+    double origin[Dimension];
     origin[0] = 0.0;    // X coordinate
     origin[1] = 0.0;    // Y coordinate
     origin[2] = 0.0;    // Z coordinate
-    importer->SetOrigin( origin );
+    importer->SetOrigin(origin);
 
-    double spacing[ Dimension ];
+    double spacing[Dimension];
     spacing[0] = 1.0;    // along X direction
     spacing[1] = 1.0;    // along Y direction
     spacing[2] = 1.0;    // along Z direction
-    importer->SetSpacing( spacing );
+    importer->SetSpacing(spacing);
 
 
-    const unsigned int numberOfPixels =  size[0] * size[1] * size[2];
+    const unsigned int numberOfPixels = size[0] * size[1] * size[2];
     EigenValuesType * pixelData = new EigenValuesType[numberOfPixels];
 
     const bool importFilterWillDeleteTheInputBuffer = false;
@@ -168,30 +132,28 @@ private:
 
   void LoadEigenVectors(HessianOutputTypePointer hessianOutput)
   {
-    //eigenVectorsPerVoxel = EigenVectorsCollectionType::New();
-
     HessianIteratorType it(hessianOutput, hessianOutput->GetRequestedRegion());
     EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
-    //EigenVectorsCollectionIteratorType eigenVectorsIterator(this->eigenVectorsPerVoxel, this->eigenVectorsPerVoxel->GetRequestedRegion());
-    //for (it = it.Begin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator, ++eigenVectorsIterator)
     for (it.GoToBegin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator)
     {
-      //eigenAnalysis.ComputeEigenValuesAndVectors(it.Value(), eigenValuesIterator.Get(), eigenVectorsIterator.Get());
       EigenValuesType eigenvalues;
       TensorType hessianMatrix = it.Get();
       hessianMatrix.ComputeEigenValues(eigenvalues);
+
+      // just for testing, so the eigenvalues will be visible
+      eigenvalues.SetElement(0, abs(eigenvalues.GetElement(0) * 1000));
+      eigenvalues.SetElement(1, abs(eigenvalues.GetElement(1) * 1000));
+      eigenvalues.SetElement(2, abs(eigenvalues.GetElement(2) * 1000));
+
+      //consider adding actual pixel as a fourth component
+
       eigenValuesIterator.Set(eigenvalues);
     }
   }
 
   typename EigenValuesCollectionType::Pointer eigenValuesPerVoxel;
-  //EigenVectorsCollectionType::Pointer eigenVectorsPerVoxel;
 
-  double lambda1;
-  double lambda2;
-  double lambda3;
-
-  ImageDumpSerializer<>* serializer;
+  ImageDumpSerializer<EigenValuesType, Dimension> serializer;
 };
 
-#endif // FILTERS_ITK_EIGEN_VALUES_FILTER_H_
+#endif // FILTERS_ITK_EIGEN_VALUES_RAW_H_

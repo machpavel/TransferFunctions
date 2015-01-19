@@ -70,8 +70,12 @@
     <LibraryPath>C:\Programming\Libraries\InsightToolkit\Bin\lib;C:\Programming\Libraries\Boost64\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Programming\Libraries\Boost64\include\boost-1_56\;C:\Programming\Libraries\InsightToolkit\Bin\include\ITK-4.6;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Programming\Libraries\Boost64\include\boost-1_56\;C:\Programming\Libraries\InsightToolkit\Bin\include\ITK-4.8;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Programming\Libraries\InsightToolkit\Bin\lib;C:\Programming\Libraries\Boost64\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Programming\Libraries\Boost64\include\boost-1_56\;C:\Programming\Libraries\InsightToolkit\Bin\include\ITK-4.8;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\Programming\Libraries\InsightToolkit\Bin\lib;C:\Programming\Libraries\Boost64\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,7 +97,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ITKBiasCorrection-4.6.lib;ITKBioCell-4.6.lib;ITKCommon-4.6.lib;ITKDICOMParser-4.6.lib;itkdouble-conversion-4.6.lib;ITKEXPAT-4.6.lib;ITKFEM-4.6.lib;itkgdcmCommon-4.6.lib;itkgdcmDICT-4.6.lib;itkgdcmDSED-4.6.lib;itkgdcmIOD-4.6.lib;itkgdcmjpeg12-4.6.lib;itkgdcmjpeg16-4.6.lib;itkgdcmjpeg8-4.6.lib;itkgdcmMSFF-4.6.lib;ITKgiftiio-4.6.lib;itkhdf5_cpp-4.6.lib;itkhdf5-4.6.lib;ITKIOBioRad-4.6.lib;ITKIOBMP-4.6.lib;ITKIOCSV-4.6.lib;ITKIOGDCM-4.6.lib;ITKIOGE-4.6.lib;ITKIOGIPL-4.6.lib;ITKIOHDF5-4.6.lib;ITKIOImageBase-4.6.lib;ITKIOIPL-4.6.lib;ITKIOJPEG-4.6.lib;ITKIOLSM-4.6.lib;ITKIOMesh-4.6.lib;ITKIOMeta-4.6.lib;ITKIOMRC-4.6.lib;ITKIONIFTI-4.6.lib;ITKIONRRD-4.6.lib;ITKIOPNG-4.6.lib;ITKIOSiemens-4.6.lib;ITKIOSpatialObjects-4.6.lib;ITKIOStimulate-4.6.lib;ITKIOTIFF-4.6.lib;ITKIOTransformBase-4.6.lib;ITKIOTransformHDF5-4.6.lib;ITKIOTransformInsightLegacy-4.6.lib;ITKIOTransformMatlab-4.6.lib;ITKIOVTK-4.6.lib;ITKIOXML-4.6.lib;itkjpeg-4.6.lib;ITKKLMRegionGrowing-4.6.lib;ITKLabelMap-4.6.lib;ITKMesh-4.6.lib;ITKMetaIO-4.6.lib;itkNetlibSlatec-4.6.lib;ITKniftiio-4.6.lib;ITKNrrdIO-4.6.lib;itkopenjpeg-4.6.lib;ITKOptimizers-4.6.lib;ITKOptimizersv4-4.6.lib;ITKPath-4.6.lib;itkpng-4.6.lib;ITKPolynomials-4.6.lib;ITKQuadEdgeMesh-4.6.lib;ITKSpatialObjects-4.6.lib;ITKStatistics-4.6.lib;itksys-4.6.lib;itktiff-4.6.lib;itkv3p_lsqr-4.6.lib;itkv3p_netlib-4.6.lib;itkvcl-4.6.lib;ITKVideoCore-4.6.lib;ITKVideoIO-4.6.lib;itkvnl_algo-4.6.lib;itkvnl-4.6.lib;ITKVNLInstantiation-4.6.lib;ITKVTK-4.6.lib;ITKWatersheds-4.6.lib;itkzlib-4.6.lib;ITKznz-4.6.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ITKBiasCorrection-4.8.lib;ITKBioCell-4.8.lib;ITKCommon-4.8.lib;ITKDICOMParser-4.8.lib;itkdouble-conversion-4.8.lib;ITKEXPAT-4.8.lib;ITKFEM-4.8.lib;itkgdcmCommon-4.8.lib;itkgdcmDICT-4.8.lib;itkgdcmDSED-4.8.lib;itkgdcmIOD-4.8.lib;itkgdcmjpeg12-4.8.lib;itkgdcmjpeg16-4.8.lib;itkgdcmjpeg8-4.8.lib;itkgdcmMSFF-4.8.lib;ITKgiftiio-4.8.lib;itkhdf5_cpp-4.8.lib;itkhdf5-4.8.lib;ITKIOBioRad-4.8.lib;ITKIOBMP-4.8.lib;ITKIOCSV-4.8.lib;ITKIOGDCM-4.8.lib;ITKIOGE-4.8.lib;ITKIOGIPL-4.8.lib;ITKIOHDF5-4.8.lib;ITKIOImageBase-4.8.lib;ITKIOIPL-4.8.lib;ITKIOJPEG-4.8.lib;ITKIOLSM-4.8.lib;ITKIOMesh-4.8.lib;ITKIOMeta-4.8.lib;ITKIOMRC-4.8.lib;ITKIONIFTI-4.8.lib;ITKIONRRD-4.8.lib;ITKIOPNG-4.8.lib;ITKIOSiemens-4.8.lib;ITKIOSpatialObjects-4.8.lib;ITKIOStimulate-4.8.lib;ITKIOTIFF-4.8.lib;ITKIOTransformBase-4.8.lib;ITKIOTransformHDF5-4.8.lib;ITKIOTransformInsightLegacy-4.8.lib;ITKIOTransformMatlab-4.8.lib;ITKIOVTK-4.8.lib;ITKIOXML-4.8.lib;itkjpeg-4.8.lib;ITKKLMRegionGrowing-4.8.lib;ITKLabelMap-4.8.lib;ITKMesh-4.8.lib;ITKMetaIO-4.8.lib;itkNetlibSlatec-4.8.lib;ITKniftiio-4.8.lib;ITKNrrdIO-4.8.lib;itkopenjpeg-4.8.lib;ITKOptimizers-4.8.lib;ITKOptimizersv4-4.8.lib;ITKPath-4.8.lib;itkpng-4.8.lib;ITKPolynomials-4.8.lib;ITKQuadEdgeMesh-4.8.lib;ITKSpatialObjects-4.8.lib;ITKStatistics-4.8.lib;itksys-4.8.lib;itktiff-4.8.lib;itkv3p_lsqr-4.8.lib;itkv3p_netlib-4.8.lib;itkvcl-4.8.lib;ITKVideoCore-4.8.lib;ITKVideoIO-4.8.lib;itkvnl_algo-4.8.lib;itkvnl-4.8.lib;ITKVNLInstantiation-4.8.lib;ITKVTK-4.8.lib;ITKWatersheds-4.8.lib;itkzlib-4.8.lib;ITKznz-4.8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,21 +121,25 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ITKBiasCorrection-4.8.lib;ITKBioCell-4.8.lib;ITKCommon-4.8.lib;ITKDICOMParser-4.8.lib;itkdouble-conversion-4.8.lib;ITKEXPAT-4.8.lib;ITKFEM-4.8.lib;itkgdcmCommon-4.8.lib;itkgdcmDICT-4.8.lib;itkgdcmDSED-4.8.lib;itkgdcmIOD-4.8.lib;itkgdcmjpeg12-4.8.lib;itkgdcmjpeg16-4.8.lib;itkgdcmjpeg8-4.8.lib;itkgdcmMSFF-4.8.lib;ITKgiftiio-4.8.lib;itkhdf5_cpp-4.8.lib;itkhdf5-4.8.lib;ITKIOBioRad-4.8.lib;ITKIOBMP-4.8.lib;ITKIOCSV-4.8.lib;ITKIOGDCM-4.8.lib;ITKIOGE-4.8.lib;ITKIOGIPL-4.8.lib;ITKIOHDF5-4.8.lib;ITKIOImageBase-4.8.lib;ITKIOIPL-4.8.lib;ITKIOJPEG-4.8.lib;ITKIOLSM-4.8.lib;ITKIOMesh-4.8.lib;ITKIOMeta-4.8.lib;ITKIOMRC-4.8.lib;ITKIONIFTI-4.8.lib;ITKIONRRD-4.8.lib;ITKIOPNG-4.8.lib;ITKIOSiemens-4.8.lib;ITKIOSpatialObjects-4.8.lib;ITKIOStimulate-4.8.lib;ITKIOTIFF-4.8.lib;ITKIOTransformBase-4.8.lib;ITKIOTransformHDF5-4.8.lib;ITKIOTransformInsightLegacy-4.8.lib;ITKIOTransformMatlab-4.8.lib;ITKIOVTK-4.8.lib;ITKIOXML-4.8.lib;itkjpeg-4.8.lib;ITKKLMRegionGrowing-4.8.lib;ITKLabelMap-4.8.lib;ITKMesh-4.8.lib;ITKMetaIO-4.8.lib;itkNetlibSlatec-4.8.lib;ITKniftiio-4.8.lib;ITKNrrdIO-4.8.lib;itkopenjpeg-4.8.lib;ITKOptimizers-4.8.lib;ITKOptimizersv4-4.8.lib;ITKPath-4.8.lib;itkpng-4.8.lib;ITKPolynomials-4.8.lib;ITKQuadEdgeMesh-4.8.lib;ITKSpatialObjects-4.8.lib;ITKStatistics-4.8.lib;itksys-4.8.lib;itktiff-4.8.lib;itkv3p_lsqr-4.8.lib;itkv3p_netlib-4.8.lib;itkvcl-4.8.lib;ITKVideoCore-4.8.lib;ITKVideoIO-4.8.lib;itkvnl_algo-4.8.lib;itkvnl-4.8.lib;ITKVNLInstantiation-4.8.lib;ITKVTK-4.8.lib;ITKWatersheds-4.8.lib;itkzlib-4.8.lib;ITKznz-4.8.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="FileWriter.h" />
+    <ClInclude Include="Filters\ItkCroppingFilter.h" />
     <ClInclude Include="ImageDumpBase.h" />
     <ClInclude Include="ImageDumpDeserializer.h" />
     <ClInclude Include="ImageDumpSerializer.h" />
+    <ClInclude Include="Filters\ItkEigenValuesRaw.h" />
     <ClInclude Include="ItkImageFilter.h" />
   </ItemGroup>
   <ItemGroup>

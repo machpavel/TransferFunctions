@@ -9,6 +9,7 @@ public:
   FileWriter(const std::string & filename);
   void CloseFile();
   void ReopenFile();
+  std::string GetFileName();
 
   ~FileWriter();
 

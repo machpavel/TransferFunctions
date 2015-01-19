@@ -15,11 +15,11 @@ public:
   typedef itk::HessianRecursiveGaussianImageFilter<typename ItkImageFilter::ImageType, HessianOutputType> HessianFilterType;
   typedef itk::Hessian3DToVesselnessMeasureImageFilter<PixelType> VesselnessMeasureFilterType;
 
-  ItkHessianToVesselnessFilter(typename ItkImageFilter::ImageConstPointer image) : ItkImageFilter(image)
+  ItkHessianToVesselnessFilter(typename ItkImageFilter::ImagePointer image) : ItkImageFilter(image)
   {
   }
   
-  typename ItkImageFilter::ImageConstPointer GetHessianToVesselnessFilterImage()
+  typename ItkImageFilter::ImagePointer GetHessianToVesselnessFilterImage()
   {
     double hessianSigma = 0;
     double alpha1 = 0;
@@ -41,7 +41,7 @@ public:
   {
   }
 
-  virtual typename ImageConstPointer GetFilterImage() override
+  virtual typename ImagePointer GetFilterImage() override
   {
     return this->GetHessianToVesselnessFilterImage();
   }
@@ -53,7 +53,7 @@ public:
 
 private:
 
-  HessianOutputType::ConstPointer GetHessianRecursiveGaussianFilterImage(double sigma)
+  HessianOutputType::Pointer GetHessianRecursiveGaussianFilterImage(double sigma)
   {
     HessianFilterType::Pointer hessianFilter = HessianFilterType::New();
     hessianFilter->SetInput(this->image.GetPointer());
@@ -63,11 +63,11 @@ private:
     return hessianFilter->GetOutput();
   }
 
-  typename ItkImageFilter::ImageConstPointer GetHessianToVesselnessFilterImage(double hessianSigma, double alpha1, double alpha2)
+  typename ItkImageFilter::ImagePointer GetHessianToVesselnessFilterImage(double hessianSigma, double alpha1, double alpha2)
   {
     VesselnessMeasureFilterType::Pointer vesselnessFilter = VesselnessMeasureFilterType::New();
 
-    HessianOutputType::ConstPointer hessianOutput = this->GetHessianRecursiveGaussianFilterImage(hessianSigma);
+    HessianOutputType::Pointer hessianOutput = this->GetHessianRecursiveGaussianFilterImage(hessianSigma);
 
     vesselnessFilter->SetInput(hessianOutput);
     vesselnessFilter->SetAlpha1(alpha1);

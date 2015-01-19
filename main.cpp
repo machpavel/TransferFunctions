@@ -1,10 +1,10 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 
-#include "itkImage.h"
-#include "itkImportImageFilter.h"
+#include <itkImage.h>
+#include <itkImportImageFilter.h>
 
-#include "itkImageFileWriter.h"
+#include <itkImageFileWriter.h>
 
 #include "ImageDumpDeserializer.h"
 #include "ImageDumpSerializer.h"
@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
 
 
     ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
-    ImageType::ConstPointer image = deserializer->DeserializeImage();
+    ImageType::Pointer image = deserializer->DeserializeImage();
 
     ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
     serializer->SetMinimums(deserializer->GetMinimums());
@@ -77,7 +77,10 @@ int main(int argc, char * argv[])
           FilterDecision<PixelType, Dimension>::PrintFilterNames();
         }
       }
-    } while (read != "exit");
+
+      //serializer->WriteImageAsSlices(image);
+    }
+    while (read != "exit");
 
     delete filter;
 

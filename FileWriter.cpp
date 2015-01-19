@@ -10,6 +10,11 @@ FileWriter::~FileWriter()
   this->writer.close();
 }
 
+std::string FileWriter::GetFileName()
+{
+  return this->filename;
+}
+
 void FileWriter::Init()
 {
   // writing of endianness; currently not used further

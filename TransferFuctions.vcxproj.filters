@@ -36,6 +36,12 @@
     <ClInclude Include="ItkImageFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Filters\ItkEigenValuesRaw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\ItkCroppingFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileReader.cpp">

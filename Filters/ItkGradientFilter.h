@@ -10,11 +10,11 @@ class ItkGradientFilter : public ItkImageFilter<Constants::GlobalPixelType, Dime
 public:
   typedef itk::GradientMagnitudeImageFilter<ImageType, ImageType> GradientFilterType;
 
-  ItkGradientFilter(typename ImageConstPointer image) : ItkImageFilter(image)
+  ItkGradientFilter(typename ImagePointer image) : ItkImageFilter(image)
   {
   }
 
-  typename ImageConstPointer GetGradientFilterImage()
+  typename ImagePointer GetGradientFilterImage()
   {
     GradientFilterType::Pointer gradientFilter = GradientFilterType::New();
     gradientFilter->SetInput(this->image.GetPointer());
@@ -27,7 +27,7 @@ public:
   {
   }
 
-  virtual typename ImageConstPointer GetFilterImage() override
+  virtual typename ImagePointer GetFilterImage() override
   {
     return this->GetGradientFilterImage();
   }
