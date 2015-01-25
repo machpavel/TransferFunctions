@@ -42,6 +42,21 @@
     <ClInclude Include="Filters\ItkCroppingFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Filters\FilterDecision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\ItkEigenValuesFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\ItkGradientFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\ItkHessianToVesselnessFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\IEigenValuesFilterVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileReader.cpp">

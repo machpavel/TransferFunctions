@@ -36,6 +36,7 @@ public:
     ImageType::RegionType region = exporter->GetLargestPossibleRegion();
 
     ImageType::SizeType size = region.GetSize();
+    ImageType::IndexType index = region.GetIndex();
 
     this->SerializeHeader(exporter, size);
 
@@ -47,11 +48,11 @@ public:
     size_t height = size[1];
     size_t depth = size[2];
 
-    for (size_t z = 0; z < depth; ++z)
+    for (size_t z = index[2]; z < depth + index[2]; ++z)
     {
-      for (size_t y = 0; y < height; ++y)
+      for (size_t y = index[1]; y < height + index[1]; ++y)
       {
-        for (size_t x = 0; x < width; ++x)
+        for (size_t x = index[0]; x < width + index[0]; ++x)
         {
           itk::Image<PixelType, Dimension>::IndexType index;
           index[0] = x;

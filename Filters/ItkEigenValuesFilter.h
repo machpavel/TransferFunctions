@@ -4,6 +4,7 @@
 #include "../ItkImageFilter.h"
 #include "../Constants.h"
 #include "../ImageDumpSerializer.h"
+#include "IEigenValuesFilterVisitor.h"
 
 #include <itkImageDuplicator.h>
 
@@ -31,7 +32,7 @@ public:
 
 
   ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, ImageDumpSerializer<>* serializer) : ItkImageFilter(image),
-    lambda1(0), lambda2(0), lambda3(0), serializer(serializer)
+    serializer(serializer)
   {
     this->InitializeEigenvalues();
   }
@@ -59,17 +60,7 @@ public:
 
     do
     {
-      std::cout << "enter linear combination coeficients for the eigenvectors components" << std::endl;
-
-      std::cout << "lambda1 coeficient: ";
-      std::cin >> lambda1;
-
-      std::cout << "lambda2 coeficient: ";
-      std::cin >> lambda2;
-
-      std::cout << "lambda3 coeficient: ";
-      std::cin >> lambda3;
-      std::cout << std::endl;
+      this->visitor.Initialize();
 
       itk::ImageRegionIterator<ImageType> outputImageIterator(outputImage, outputImage->GetRequestedRegion());
       EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
@@ -77,7 +68,8 @@ public:
       for (outputImageIterator.GoToBegin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
       {
         EigenValuesType eigenValues = eigenValuesIterator.Get();
-        outputImageIterator.Set(this->lambda1 * eigenValues[0] + this->lambda2 * eigenValues[1] + this->lambda3 * eigenValues[2]);
+        PixelType computedValue = this->visitor.Visit(eigenValues[0], eigenValues[1], eigenValues[2]);
+          outputImageIterator.Set(computedValue);
       }
 
       std::cout << "image computed, saving" << std::endl;
@@ -187,9 +179,7 @@ private:
   typename EigenValuesCollectionType::Pointer eigenValuesPerVoxel;
   //EigenVectorsCollectionType::Pointer eigenVectorsPerVoxel;
 
-  double lambda1;
-  double lambda2;
-  double lambda3;
+  EivenValuesVesselnessVisitor<PixelType> visitor;
 
   ImageDumpSerializer<>* serializer;
 };

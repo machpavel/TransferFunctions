@@ -135,7 +135,12 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="FileWriter.h" />
+    <ClInclude Include="Filters\FilterDecision.h" />
+    <ClInclude Include="Filters\IEigenValuesFilterVisitor.h" />
     <ClInclude Include="Filters\ItkCroppingFilter.h" />
+    <ClInclude Include="Filters\ItkEigenValuesFilter.h" />
+    <ClInclude Include="Filters\ItkGradientFilter.h" />
+    <ClInclude Include="Filters\ItkHessianToVesselnessFilter.h" />
     <ClInclude Include="ImageDumpBase.h" />
     <ClInclude Include="ImageDumpDeserializer.h" />
     <ClInclude Include="ImageDumpSerializer.h" />
