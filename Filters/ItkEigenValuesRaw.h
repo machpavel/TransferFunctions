@@ -10,24 +10,22 @@ class ItkEigenValuesRaw :
   public ItkImageFilter<Constants::GlobalPixelType, Dimension>
 {
 public:
-  typedef itk::SymmetricSecondRankTensor< double, Dimension > TensorType;
+  typedef itk::SymmetricSecondRankTensor< float, Dimension > TensorType;
   typedef itk::Image<TensorType, Dimension> HessianOutputType;
   typedef typename HessianOutputType::Pointer HessianOutputTypePointer;
   typedef itk::HessianRecursiveGaussianImageFilter<typename ItkImageFilter::ImageType, HessianOutputType> HessianFilterType;
 
   typedef itk::ImageRegionConstIterator<HessianOutputType>  HessianIteratorType;
 
-  typedef itk::Vector<double, Dimension> EigenValuesType;
+  typedef itk::Vector<float, Dimension> EigenValuesType;
   typedef itk::Image<EigenValuesType, Dimension> EigenValuesCollectionType;
 
   typedef itk::ImageRegionIterator<EigenValuesCollectionType> EigenValuesCollectionIteratorType;
 
   typedef itk::ImportImageFilter<EigenValuesType, Dimension> EigenValuesImportFilterType;
 
-  static const int ELEMENT_ID_VECTOR_3_DOUBLE = 58;
 
-
-  ItkEigenValuesRaw(typename ItkImageFilter::ImagePointer image, ImageDumpSerializer<>* serializer) : ItkImageFilter(image), serializer(serializer->GetFilename())
+  ItkEigenValuesRaw(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<>* serializer) : ItkImageFilter(image), serializer(secondaryFilename)
   {
     this->InitializeEigenvalues();
 
@@ -38,7 +36,7 @@ public:
     // what is the dataset type?
     this->serializer.SetDatasetType(serializer->GetDatasetType());
 
-    this->serializer.SetElementTypeID(ItkEigenValuesRaw::ELEMENT_ID_VECTOR_3_DOUBLE);
+    this->serializer.SetElementTypeID(Constants::ELEMENT_ID_VECTOR_3_FLOAT);
   }
 
   typename ItkEigenValuesRaw::ImagePointer GetEigenValuesFilterImage()
@@ -139,13 +137,6 @@ private:
       EigenValuesType eigenvalues;
       TensorType hessianMatrix = it.Get();
       hessianMatrix.ComputeEigenValues(eigenvalues);
-
-      // just for testing, so the eigenvalues will be visible
-      eigenvalues.SetElement(0, abs(eigenvalues.GetElement(0) * 1000));
-      eigenvalues.SetElement(1, abs(eigenvalues.GetElement(1) * 1000));
-      eigenvalues.SetElement(2, abs(eigenvalues.GetElement(2) * 1000));
-
-      //consider adding actual pixel as a fourth component
 
       eigenValuesIterator.Set(eigenvalues);
     }

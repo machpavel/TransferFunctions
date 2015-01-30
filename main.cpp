@@ -19,12 +19,14 @@ int main(int argc, char * argv[])
     ("help", "produce help message")
     ("input", boost::program_options::value<std::string>(), "input filename")
     ("output", boost::program_options::value<std::string>(), "output filename")
+    ("secondary", boost::program_options::value<std::string>(), "secondary dataset filename (used for storing and loading eigenvalues)")
     ;
 
   boost::program_options::variables_map vm;
   boost::program_options::positional_options_description p;
   p.add("input", 1);
   p.add("output", 1);
+  p.add("secondary", 1);
 
   boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
   //boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -34,6 +36,8 @@ int main(int argc, char * argv[])
     std::cout << desc << "\n";
     return 1;
   }
+
+  std::string secondaryFilename = vm.count("secondary") ? vm["secondary"].as<std::string>() : std::string("secondary.dump");
 
   if (vm.count("input") && vm.count("output"))
   {
@@ -64,7 +68,7 @@ int main(int argc, char * argv[])
 
       if (read != "exit")
       {
-        filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image, serializer);
+        filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image, serializer, secondaryFilename);
 
         if (filter != nullptr)
         {

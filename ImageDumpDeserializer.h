@@ -14,9 +14,30 @@ class ImageDumpDeserializer : public ImageDumpBase
 public:
   typedef itk::Image<PixelType, Dimension> ImageType;
   typedef itk::ImportImageFilter<PixelType, Dimension> ImageFilterType;
+  typedef itk::ImageRegionIterator<ImageType> ImageIterator;
 
   ImageDumpDeserializer(const std::string & filename) : reader(FileReader(filename))
   {
+  }
+
+  void DeserializeImage(typename ImageType::Pointer image)
+  {
+    this->DeserializeHeader();
+
+    ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
+
+    const size_t numberOfPixels = size[0] * size[1] * size[2];
+    PixelType* pixelData = new PixelType[numberOfPixels];
+    this->reader.Read<PixelType>(pixelData, numberOfPixels);
+
+    ImageIterator pixelIterator(image, image->GetRequestedRegion());
+    for (pixelIterator.GoToBegin(); !pixelIterator.IsAtEnd(); ++pixelIterator, ++pixelData)
+    {
+      pixelIterator.Set(*pixelData);
+    }
+
+    std::cout << "image loaded, size: " << size[0] << "x" << size[1] << "x" << size[2] <<
+      "; " << numberOfPixels * sizeof(PixelType) << "B (" << numberOfPixels * sizeof(PixelType) / (1024 * 1024) << " MB)" << std::endl;
   }
 
   typename ImageType::Pointer DeserializeImage()

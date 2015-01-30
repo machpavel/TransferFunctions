@@ -16,7 +16,12 @@ public:
 
   typedef ItkImageFilter<PixelType, Dimension> ItkImageFilterType;
 
-  static ItkImageFilterType* GetFilter(const std::string& filterName, typename ItkImageFilter<PixelType, Dimension>::ImagePointer image, ImageDumpSerializer<>* serializer)
+  static ItkImageFilterType* GetFilter (
+    const std::string& filterName,
+    typename ItkImageFilter<PixelType,
+    Dimension>::ImagePointer image,
+    ImageDumpSerializer<>* serializer,
+    std::string secondaryFilename)
   {
     if (filterName == "gradient")
     {
@@ -28,13 +33,13 @@ public:
     }
     else if (filterName == "hessian to eigenvalues")
     {
-      return new ItkEigenValuesFilter<PixelType, Dimension>(image, serializer);
+      return new ItkEigenValuesFilter<PixelType, Dimension>(image, secondaryFilename, serializer);
     }
     else if (filterName == "hessian to raw eigenvalues")
     {
-      return new ItkEigenValuesRaw<PixelType, Dimension>(image, serializer);
+      return new ItkEigenValuesRaw<PixelType, Dimension>(image, secondaryFilename, serializer);
     }
-    else if (filterName == "cropping filter")
+    else if (filterName == "cropping")
     {
       return new ItkCroppingFilter<PixelType, Dimension>(image);
     }
@@ -50,6 +55,8 @@ public:
     std::cout << "gradient" << std::endl;
     std::cout << "hessian to vesselness" << std::endl;
     std::cout << "hessian to eigenvalues" << std::endl;
+    std::cout << "hessian to raw eigenvalues" << std::endl;
+    std::cout << "cropping" << std::endl;
   }
 };
 

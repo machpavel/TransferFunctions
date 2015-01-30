@@ -12,6 +12,10 @@ public:
   static const unsigned int DUMP_SLICE_BEGIN_MAGIC_NUMBER= 0xAAAAFFFF;
   static const unsigned int DUMP_SLICE_END_MAGIC_NUMBER = 0xBBBBFFFF;
   static const unsigned int ACTUAL_FORMAT_VERSION = 1;
+
+  static const int ELEMENT_ID_VECTOR_3_FLOAT = 57;
+
+  typedef itk::Vector<float, 3> EigenValuesType;
 };
 
 #endif // CONSTANTS_H_

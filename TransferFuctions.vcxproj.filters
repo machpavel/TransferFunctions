@@ -62,9 +62,6 @@
     <ClCompile Include="FileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileWriter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageDumpBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -27,7 +27,7 @@ public:
   typedef itk::Image<PixelType, 2> SliceType;
   typedef itk::ExtractImageFilter<ImageType, SliceType> FilterType;
 
-  ImageDumpSerializer(const std::string & filename) : writer(FileWriter(filename))
+  ImageDumpSerializer(const std::string & filename) : writer(FileWriter<PixelType>(filename))
   {
   }
 
@@ -59,12 +59,12 @@ public:
           index[1] = y;
           index[2] = z;
 
-          this->writer.Write<PixelType>(exporter->GetPixel(index));
+          this->writer.Write(exporter->GetPixel(index));
         }
       }
     }
 
-    this->writer.Write<unsigned int>(Constants::DUMP_END_MAGIC_NUMBER);
+    this->writer.WriteOtherType<unsigned int>(Constants::DUMP_END_MAGIC_NUMBER);
   }
 
   void WriteImageAsSlices(ImageConstPointer exporter)
@@ -188,28 +188,28 @@ public:
 private:
   void SerializeHeader(ImagePointer exporter, typename ImageType::SizeType size)
   {
-    this->writer.Write<unsigned int>(Constants::DUMP_START_MAGIC_NUMBER);
+    this->writer.WriteOtherType<unsigned int>(Constants::DUMP_START_MAGIC_NUMBER);
 
-    this->writer.Write<unsigned int>(Constants::ACTUAL_FORMAT_VERSION);
+    this->writer.WriteOtherType<unsigned int>(Constants::ACTUAL_FORMAT_VERSION);
 
-    this->writer.Write<unsigned int>(this->datasetType);
+    this->writer.WriteOtherType<unsigned int>(this->datasetType);
 
-    this->writer.Write<unsigned int>(Dimension);
+    this->writer.WriteOtherType<unsigned int>(Dimension);
 
-    this->writer.Write<unsigned int>(elementTypeID);
+    this->writer.WriteOtherType<unsigned int>(elementTypeID);
 
     for (size_t i = 0; i < Dimension; ++i)
     {
-      this->writer.Write<int>(/*this->minimums[i]*/0);
-      this->writer.Write<int>(/*this->maximums[i]*/size[i]);
-      this->writer.Write<float>(this->elementExtents[i]);
+      this->writer.WriteOtherType<int>(/*this->minimums[i]*/0);
+      this->writer.WriteOtherType<int>(/*this->maximums[i]*/size[i]);
+      this->writer.WriteOtherType<float>(this->elementExtents[i]);
     }
 
-    this->writer.Write<unsigned int>(Constants::DUMP_HEADER_END_MAGIC_NUMBER);
+    this->writer.WriteOtherType<unsigned int>(Constants::DUMP_HEADER_END_MAGIC_NUMBER);
   }
 
   //CustomItkImage<PixelType, Dimension> image;
-  FileWriter writer;
+  FileWriter<PixelType> writer;
 };
 
 #endif // IMAGE_DUMP_SERIALIZER_H_

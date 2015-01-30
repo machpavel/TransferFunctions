@@ -8,36 +8,95 @@
 
 #include <itkImageDuplicator.h>
 
+#include <boost/filesystem.hpp>
+
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
 class ItkEigenValuesFilter :
   public ItkImageFilter<Constants::GlobalPixelType, Dimension>
 {
 public:
-  typedef itk::SymmetricSecondRankTensor< double, Dimension > TensorType;
+  typedef itk::SymmetricSecondRankTensor<float, Dimension > TensorType;
   typedef itk::Image<TensorType, Dimension> HessianOutputType;
   typedef typename HessianOutputType::Pointer HessianOutputTypePointer;
   typedef itk::HessianRecursiveGaussianImageFilter<typename ItkImageFilter::ImageType, HessianOutputType> HessianFilterType;
 
   typedef itk::ImageRegionConstIterator<HessianOutputType>  HessianIteratorType;
 
-  typedef itk::Vector<double, Dimension> EigenValuesType;
-  typedef itk::Matrix<double, Dimension, Dimension> EigenVectorsType;
+  typedef itk::Vector<float, Dimension> EigenValuesType;
   typedef itk::Image<EigenValuesType, Dimension> EigenValuesCollectionType;
-  //typedef itk::Image<EigenVectorsType, Dimension> EigenVectorsCollectionType;
 
   typedef itk::ImageRegionIterator<EigenValuesCollectionType> EigenValuesCollectionIteratorType;
-  //typedef itk::ImageRegionIterator<EigenVectorsCollectionType> EigenVectorsCollectionIteratorType;
 
   typedef itk::ImportImageFilter<EigenValuesType, Dimension> EigenValuesImportFilterType;
 
 
-  ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, ImageDumpSerializer<>* serializer) : ItkImageFilter(image),
-    serializer(serializer)
+  ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<>* serializer) : ItkImageFilter(image),
+    secondaryFilename(secondaryFilename), serializerToCopy(serializer)
   {
     this->InitializeEigenvalues();
   }
 
   typename ItkImageFilter::ImagePointer GetEigenValuesFilterImage()
+  {
+    if (boost::filesystem::exists(boost::filesystem::path(this->secondaryFilename)))
+    {
+      std::cout << "found image containing eigenvalues" << std::endl;
+
+      this->LoadEigenvaluesFromImage();
+    }
+    else
+    {
+      std::cout << "image containing eigenvalues not found, they will be computed" << std::endl;
+
+      this->ComputeEigenvalues();
+
+      this->SerializeEigenvalues();
+    }
+
+    std::cout << "Performing computes on eigenvalues" << std::endl;
+
+    typedef itk::ImageDuplicator<ImageType> DuplicatorType;
+    DuplicatorType::Pointer duplicator = DuplicatorType::New();
+    duplicator->SetInputImage(this->image);
+    duplicator->Update();
+    ImageType::Pointer outputImage = duplicator->GetModifiableOutput();
+
+    itk::ImageRegionIterator<ImageType> outputImageIterator(outputImage, outputImage->GetRequestedRegion());
+    EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
+    eigenValuesIterator.GoToBegin();
+    for (outputImageIterator.GoToBegin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
+    {
+      EigenValuesType eigenValues = eigenValuesIterator.Get();
+      PixelType computedValue = this->visitor.Visit(eigenValues[0], eigenValues[1], eigenValues[2]);
+        outputImageIterator.Set(computedValue);
+    }
+
+    return outputImage;
+  }
+
+  void SerializeEigenvalues()
+  {
+    ImageDumpSerializer<EigenValuesType, Dimension> serializer(this->secondaryFilename);
+
+    serializer.SetMinimums(this->serializerToCopy->GetMinimums());
+    serializer.SetMaximums(this->serializerToCopy->GetMaximums());
+    serializer.SetElementExtents(this->serializerToCopy->GetElementExtents());
+
+    // what is the dataset type?
+    serializer.SetDatasetType(this->serializerToCopy->GetDatasetType());
+
+    serializer.SetElementTypeID(Constants::ELEMENT_ID_VECTOR_3_FLOAT);
+
+    std::cout << "saving computed eigenvalues" << std::endl;
+    serializer.SerializeImage(this->eigenValuesPerVoxel);
+    serializer.CloseFile();
+  }
+
+  virtual ~ItkEigenValuesFilter()
+  {
+  }
+
+  void ComputeEigenvalues()
   {
     double hessianSigma = 0;
 
@@ -47,49 +106,17 @@ public:
 
     HessianOutputType::Pointer hessianOutput = this->GetHessianRecursiveGaussianFilterImage(hessianSigma);
 
-    typedef itk::ImageDuplicator<ImageType> DuplicatorType;
-    DuplicatorType::Pointer duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(this->image);
-    duplicator->Update();
-    ImageType::Pointer outputImage = duplicator->GetModifiableOutput();
-
     std::cout << "computing eigenvalues at each point" << std::endl;
-    this->LoadEigenVectors(hessianOutput);
+    this->ComputeEigenVectors(hessianOutput);
 
-    std::string read;
-
-    do
-    {
-      this->visitor.Initialize();
-
-      itk::ImageRegionIterator<ImageType> outputImageIterator(outputImage, outputImage->GetRequestedRegion());
-      EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
-      eigenValuesIterator.GoToBegin();
-      for (outputImageIterator.GoToBegin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
-      {
-        EigenValuesType eigenValues = eigenValuesIterator.Get();
-        PixelType computedValue = this->visitor.Visit(eigenValues[0], eigenValues[1], eigenValues[2]);
-          outputImageIterator.Set(computedValue);
-      }
-
-      std::cout << "image computed, saving" << std::endl;
-
-      this->serializer->SerializeImage(outputImage);
-      this->serializer->CloseFile();
-
-      std::cout << "continue with different coefficients? (yes/no)" << std:: endl;
-
-      std::cin >> read;
-    }
-    while (read != "no");
-
-    this->serializer->ReopenFile();
-
-    return outputImage;
+    std::cout << "eigenvalues computed, saving: " << this->secondaryFilename << std::endl;
   }
 
-  virtual ~ItkEigenValuesFilter()
+  void LoadEigenvaluesFromImage()
   {
+    ImageDumpDeserializer<EigenValuesType, Dimension> deserializer(this->secondaryFilename);
+
+    deserializer.DeserializeImage(this->eigenValuesPerVoxel);
   }
 
   virtual typename ImagePointer GetFilterImage() override
@@ -158,17 +185,12 @@ private:
     this->eigenValuesPerVoxel = importer->GetOutput();
   }
 
-  void LoadEigenVectors(HessianOutputTypePointer hessianOutput)
+  void ComputeEigenVectors(HessianOutputTypePointer hessianOutput)
   {
-    //eigenVectorsPerVoxel = EigenVectorsCollectionType::New();
-
     HessianIteratorType it(hessianOutput, hessianOutput->GetRequestedRegion());
     EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
-    //EigenVectorsCollectionIteratorType eigenVectorsIterator(this->eigenVectorsPerVoxel, this->eigenVectorsPerVoxel->GetRequestedRegion());
-    //for (it = it.Begin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator, ++eigenVectorsIterator)
     for (it.GoToBegin(); !it.IsAtEnd(); ++it, ++eigenValuesIterator)
     {
-      //eigenAnalysis.ComputeEigenValuesAndVectors(it.Value(), eigenValuesIterator.Get(), eigenVectorsIterator.Get());
       EigenValuesType eigenvalues;
       TensorType hessianMatrix = it.Get();
       hessianMatrix.ComputeEigenValues(eigenvalues);
@@ -177,11 +199,12 @@ private:
   }
 
   typename EigenValuesCollectionType::Pointer eigenValuesPerVoxel;
-  //EigenVectorsCollectionType::Pointer eigenVectorsPerVoxel;
 
   EivenValuesVesselnessVisitor<PixelType> visitor;
 
-  ImageDumpSerializer<>* serializer;
+  ImageDumpSerializer<>* serializerToCopy;
+
+  std::string secondaryFilename;
 };
 
 #endif // FILTERS_ITK_EIGEN_VALUES_FILTER_H_

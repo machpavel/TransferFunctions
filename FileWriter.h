@@ -2,34 +2,69 @@
 #define FILE_WRITER_H_
 
 #include <fstream>
+#include <itkVector.h>
 
+template<typename T>
 class FileWriter
 {
 public:
-  FileWriter(const std::string & filename);
-  void CloseFile();
-  void ReopenFile();
-  std::string GetFileName();
+  FileWriter(const std::string & filename) : filename(filename), writer(std::ofstream(this->filename, std::ifstream::binary))
+  {
+    this->Init();
+  }
 
-  ~FileWriter();
+  void CloseFile()
+  {
+    this->writer.close();
+  }
 
-  template<typename T>
+  void ReopenFile()
+  {
+    this->writer = std::ofstream(this->filename, std::ifstream::binary);
+    this->Init();
+  }
+
+  std::string GetFileName()
+  {
+    return this->filename;
+  }
+
+  ~FileWriter()
+  {
+    this->writer.close();
+  }
+
+
   void Write(T chunk)
   {
     this->writer.write((char*)&chunk, sizeof(T));
   }
 
-  template<typename T>
-  void Write(T* pointer, size_t count)
+  template<typename OtherType>
+  void WriteOtherType(OtherType chunk)
   {
-    this->writer.write((char*)pointer, sizeof(T) * count);
+    this->writer.write((char*)&chunk, sizeof(OtherType));
   }
 
 private:
-  void Init();
+  void Init()
+  {
+    // writing of endianness; currently not used further
+    char endianness = 1;
+    this->writer.write(&endianness, sizeof(char));
+  }
 
   std::string filename;
   std::ofstream writer;
 };
+
+template<>
+void FileWriter<Constants::EigenValuesType>::Write(Constants::EigenValuesType chunk)
+{
+  for (size_t i = 0; i < Constants::EigenValuesType::GetVectorDimension(); ++i)
+  {
+    this->writer.write((char*)&chunk[i], sizeof(Constants::EigenValuesType::ValueType));
+  }
+}
 
 #endif // FILE_WRITER_H_

@@ -5,8 +5,10 @@ template<typename PixelType = Constants::GlobalPixelType>
 class IEigenValuesFilterVisitor
 {
 public:
+  typedef double EigenvaluesType;
+
   virtual void Initialize() = 0;
-  virtual PixelType Visit(PixelType lambda1, PixelType lambda2, PixelType lambda3) = 0;
+  virtual PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) = 0;
 };
 
 template<typename PixelType = Constants::GlobalPixelType>
@@ -47,9 +49,28 @@ public:
   {
   }
 
-  PixelType Visit(PixelType lambda1, PixelType lambda2, PixelType lambda3) override
+  PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
   {
-    return std::abs(lambda1) / (std::abs(lambda2) + std::abs(lambda3) + 0.001); // to avoid division by zero
+    this->SortEigenValuesAbsoluteValue(lambda1, lambda2, lambda3);
+
+    return (std::abs(lambda2) + std::abs(lambda3)) / std::abs(lambda1 + std::numeric_limits<PixelType>::epsilon()); // to avoid division by zero
+  }
+
+private:
+  void SortEigenValuesAbsoluteValue(EigenvaluesType& lambda1, EigenvaluesType& lambda2, EigenvaluesType& lambda3)
+  {
+    // simple bubble sort
+    while (abs(lambda1) > abs(lambda2) || abs(lambda2) > abs(lambda3))
+    {
+      if (abs(lambda1) > abs(lambda2))
+      {
+        std::swap(lambda1, lambda2);
+      }
+      if (abs(lambda2) > abs(lambda3))
+      {
+        std::swap(lambda2, lambda3);
+      }
+    }
   }
 };
 
