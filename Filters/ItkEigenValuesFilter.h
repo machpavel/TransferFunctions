@@ -55,6 +55,8 @@ public:
 
     std::cout << "Performing computes on eigenvalues" << std::endl;
 
+    this->visitor.Initialize();
+
     typedef itk::ImageDuplicator<ImageType> DuplicatorType;
     DuplicatorType::Pointer duplicator = DuplicatorType::New();
     duplicator->SetInputImage(this->image);
@@ -200,7 +202,7 @@ private:
 
   typename EigenValuesCollectionType::Pointer eigenValuesPerVoxel;
 
-  EivenValuesVesselnessVisitor<PixelType> visitor;
+  EigenValuesVesselnessVisitor<PixelType> visitor;
 
   ImageDumpSerializer<>* serializerToCopy;
 
