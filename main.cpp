@@ -11,6 +11,8 @@
 #include "ItkImageFilter.h"
 #include "Filters/FilterDecision.h"
 
+#include "DicomImport.h"
+
 int main(int argc, char * argv[])
 {
   // Declare the supported options.
@@ -20,6 +22,7 @@ int main(int argc, char * argv[])
     ("input", boost::program_options::value<std::string>(), "input filename")
     ("output", boost::program_options::value<std::string>(), "output filename")
     ("secondary", boost::program_options::value<std::string>(), "secondary dataset filename (used for storing and loading eigenvalues)")
+    ("loadDicom", boost::program_options::value<std::string>(), "load DICOM series and store it in a file; no filters applied")
     ;
 
   boost::program_options::variables_map vm;
@@ -27,9 +30,9 @@ int main(int argc, char * argv[])
   p.add("input", 1);
   p.add("output", 1);
   p.add("secondary", 1);
+  p.add("loadDicom", 1);
 
   boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-  //boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
   boost::program_options::notify(vm);    
 
   if (vm.count("help")) {
@@ -41,57 +44,64 @@ int main(int argc, char * argv[])
 
   if (vm.count("input") && vm.count("output"))
   {
-    typedef Constants::GlobalPixelType PixelType;
-    const unsigned int Dimension = 3;
-    typedef itk::Image<PixelType, Dimension> ImageType;
-    typedef itk::ImportImageFilter< PixelType, Dimension >   ImportFilterType;
-
-
-    ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
-    ImageType::Pointer image = deserializer->DeserializeImage();
-
-    ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
-    serializer->SetMinimums(deserializer->GetMinimums());
-    serializer->SetMaximums(deserializer->GetMaximums());
-    serializer->SetElementExtents(deserializer->GetElementExtents());
-    serializer->SetDatasetType(deserializer->GetDatasetType());
-    serializer->SetElementTypeID(deserializer->GetElementTypeID());
-
-    ItkImageFilter<PixelType, Dimension>* filter = nullptr;
-
-    std::string read;
-
-    do
+    if ((vm.count("loadDicom") == 0))
     {
-      std::cout << "enter filter name or type \"exit\"" << std::endl;
-      std::getline(std::cin, read);
+      typedef Constants::GlobalPixelType PixelType;
+      const unsigned int Dimension = 3;
+      typedef itk::Image<PixelType, Dimension> ImageType;
+      typedef itk::ImportImageFilter< PixelType, Dimension >   ImportFilterType;
 
-      if (read != "exit")
+
+      ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
+      ImageType::Pointer image = deserializer->DeserializeImage();
+
+      ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
+      serializer->SetMinimums(deserializer->GetMinimums());
+      serializer->SetMaximums(deserializer->GetMaximums());
+      serializer->SetElementExtents(deserializer->GetElementExtents());
+      serializer->SetDatasetType(deserializer->GetDatasetType());
+      serializer->SetElementTypeID(deserializer->GetElementTypeID());
+
+      ItkImageFilter<PixelType, Dimension>* filter = nullptr;
+
+      std::string read;
+
+      do
       {
-        filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image, serializer, secondaryFilename);
+        std::cout << "enter filter name or type \"exit\"" << std::endl;
+        std::getline(std::cin, read);
 
-        if (filter != nullptr)
+        if (read != "exit")
         {
-          std::cout << "using " << filter->GetFilterName() << " filter" << std::endl;
-          image = filter->GetFilterImage();
-        }
-        else
-        {
-          std::cout << "given wrong filter name; possible values are:" << std::endl;
-          FilterDecision<PixelType, Dimension>::PrintFilterNames();
-        }
-      }
+          filter = FilterDecision<PixelType, Dimension>::GetFilter(read, image, serializer, secondaryFilename);
 
-      //serializer->WriteImageAsSlices(image);
+          if (filter != nullptr)
+          {
+            std::cout << "using " << filter->GetFilterName() << " filter" << std::endl;
+            image = filter->GetFilterImage();
+          }
+          else
+          {
+            std::cout << "given wrong filter name; possible values are:" << std::endl;
+            FilterDecision<PixelType, Dimension>::PrintFilterNames();
+          }
+        }
+
+        //serializer->WriteImageAsSlices(image);
+      } while (read != "exit");
+
+      delete filter;
+
+      serializer->SerializeImage(image);
+
+      delete deserializer;
+      delete serializer;
     }
-    while (read != "exit");
-
-    delete filter;
-
-    serializer->SerializeImage(image);
-
-    delete deserializer;
-    delete serializer;
+    else
+    {
+      DicomImport<> importer(vm["input"].as<std::string>(), vm["output"].as<std::string>());
+      importer.Convert();
+    }
 
     return EXIT_SUCCESS;
   }

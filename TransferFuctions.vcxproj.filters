@@ -57,6 +57,9 @@
     <ClInclude Include="Filters\IEigenValuesFilterVisitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DicomImport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileReader.cpp">

@@ -37,8 +37,9 @@ public:
 
     ImageType::SizeType size = region.GetSize();
     ImageType::IndexType index = region.GetIndex();
+    ImageType::SpacingType spacing = exporter->GetSpacing();
 
-    this->SerializeHeader(exporter, size);
+    this->SerializeHeader(exporter, size, spacing);
 
 
     // TODO: Rewrite as a single write operation
@@ -186,7 +187,7 @@ public:
   }
 
 private:
-  void SerializeHeader(ImagePointer exporter, typename ImageType::SizeType size)
+  void SerializeHeader(ImagePointer exporter, typename ImageType::SizeType size, typename ImageType::SpacingType spacing)
   {
     this->writer.WriteOtherType<unsigned int>(Constants::DUMP_START_MAGIC_NUMBER);
 
@@ -202,7 +203,7 @@ private:
     {
       this->writer.WriteOtherType<int>(/*this->minimums[i]*/0);
       this->writer.WriteOtherType<int>(/*this->maximums[i]*/size[i]);
-      this->writer.WriteOtherType<float>(this->elementExtents[i]);
+      this->writer.WriteOtherType<float>(/*this->elementExtents[i]*/spacing[i]);
     }
 
     this->writer.WriteOtherType<unsigned int>(Constants::DUMP_HEADER_END_MAGIC_NUMBER);
