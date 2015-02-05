@@ -68,9 +68,61 @@ public:
   }
 
 private:
-  double lambda1;
-  double lambda2;
-  double lambda3;
+  EigenvaluesType lambda1;
+  EigenvaluesType lambda2;
+  EigenvaluesType lambda3;
+};
+
+template<typename PixelType = Constants::GlobalPixelType>
+class EigenValuesFrangiVesselnessVisitor : IEigenValuesFilterVisitor<PixelType>
+{
+public:
+
+  static const PixelType RANGE_NORMALIZATION_CONSTANT = 1000;
+
+  void Initialize() override
+  {
+    std::cout << "alpha: ";
+    std::cin >> this->alpha;
+
+    std::cout << "beta: ";
+    std::cin >> this->beta;
+
+    std::cout << "gamma: ";
+    std::cin >> this->gamma;
+    std::cout << std::endl;
+  }
+
+  EigenvaluesType ExponencialFormula(EigenvaluesType a, EigenvaluesType b)
+  {
+    return exp(-((a*a) / (2*b*b)));
+  }
+
+  PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
+  {
+    this->SortEigenValuesAbsoluteValue(lambda1, lambda2, lambda3);
+
+    this->R_A = abs(lambda2) / abs(lambda3);
+    this->R_B = abs(lambda1) / abs(lambda2*lambda3);
+    this->S = sqrt(lambda1*lambda1 + lambda2*lambda2 + lambda3*lambda3);
+
+    if (lambda2 < 0 && lambda3 < 0)
+    {
+      return (1 - ExponencialFormula(R_A, alpha)) * ExponencialFormula(R_B, beta) * (1 - ExponencialFormula(S, gamma)) * RANGE_NORMALIZATION_CONSTANT;
+    }
+    else
+    {
+      return 0;
+    }
+  }
+
+  EigenvaluesType alpha;
+  EigenvaluesType beta;
+  EigenvaluesType gamma;
+
+  EigenvaluesType R_A;
+  EigenvaluesType R_B;
+  EigenvaluesType S;
 };
 
 template<typename PixelType = Constants::GlobalPixelType>
@@ -121,8 +173,8 @@ public:
     }
   }
 
-  double alpha1;
-  double alpha2;
+  EigenvaluesType alpha1;
+  EigenvaluesType alpha2;
 };
 
 template<typename PixelType = Constants::GlobalPixelType>

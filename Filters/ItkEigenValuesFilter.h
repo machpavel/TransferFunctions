@@ -202,7 +202,7 @@ private:
 
   typename EigenValuesCollectionType::Pointer eigenValuesPerVoxel;
 
-  EigenValuesVesselnessVisitor<PixelType> visitor;
+  EigenValuesFrangiVesselnessVisitor<PixelType> visitor;
 
   ImageDumpSerializer<>* serializerToCopy;
 
