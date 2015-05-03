@@ -5,7 +5,7 @@
 #include "../Constants.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
-class ItkGradientFilter : public ItkImageFilter<Constants::GlobalPixelType, Dimension>
+class ItkGradientFilter : public ItkImageFilter<PixelType, Dimension>
 {
 public:
   typedef itk::GradientMagnitudeImageFilter<ImageType, ImageType> GradientFilterType;

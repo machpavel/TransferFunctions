@@ -3,10 +3,16 @@
 
 #include "../ItkImageFilter.h"
 #include "ItkGradientFilter.h"
+#include "ItkGaussianFilter.h"
 #include "ItkHessianToVesselnessFilter.h"
 #include "ItkEigenValuesFilter.h"
 #include "ItkEigenValuesRaw.h"
 #include "ItkCroppingFilter.h"
+#include "ItkLoGFilter.h"
+#include "ItkCannyFilter.h"
+#include "ItkSobelFilter.h"
+#include "CheckerFilter.h"
+#include "ArtificialObjectsFilter.h"
 #include "../ImageDumpSerializer.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
@@ -18,14 +24,17 @@ public:
 
   static ItkImageFilterType* GetFilter (
     const std::string& filterName,
-    typename ItkImageFilter<PixelType,
-    Dimension>::ImagePointer image,
-    ImageDumpSerializer<>* serializer,
+    typename ItkImageFilter<PixelType, Dimension>::ImagePointer image,
+    ImageDumpSerializer<PixelType, Dimension>* serializer,
     std::string secondaryFilename)
   {
     if (filterName == "gradient")
     {
       return new ItkGradientFilter<PixelType, Dimension>(image);
+    }
+    if (filterName == "gaussian")
+    {
+      return new ItkGaussianFilter<PixelType, Dimension>(image);
     }
     else if (filterName == "hessian to vesselness")
     {
@@ -42,6 +51,26 @@ public:
     else if (filterName == "cropping")
     {
       return new ItkCroppingFilter<PixelType, Dimension>(image);
+    }
+    else if (filterName == "LoG")
+    {
+      return new ItkLoGFilter<PixelType, Dimension>(image);
+    }
+    else if (filterName == "canny")
+    {
+      return new ItkCannyEdgeFilter<PixelType, Dimension>(image);
+    }
+    else if (filterName == "sobel")
+    {
+      return new ItkSobelFilter<PixelType, Dimension>(image);
+    }
+    else if (filterName == "checker")
+    {
+      return new CheckerFilter<PixelType, Dimension>(image);
+    }
+    else if (filterName == "artificial")
+    {
+      return new ArtificialObjectsFilter<PixelType, Dimension>(image);
     }
     else
     {

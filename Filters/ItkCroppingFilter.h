@@ -7,7 +7,7 @@
 #include "../Constants.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
-class ItkCroppingFilter : public ItkImageFilter<Constants::GlobalPixelType, Dimension>
+class ItkCroppingFilter : public ItkImageFilter<PixelType, Dimension>
 {
 public:
   typedef itk::ExtractImageFilter<ImageType, ImageType> ExtractImageFilterType;

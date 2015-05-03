@@ -78,10 +78,14 @@ class EigenValuesFrangiVesselnessVisitor : IEigenValuesFilterVisitor<PixelType>
 {
 public:
 
-  static const PixelType RANGE_NORMALIZATION_CONSTANT = 1000;
+  //static const PixelType RANGE_NORMALIZATION_CONSTANT = 1000;
 
   void Initialize() override
   {
+#if _DEBUG
+    this->max = 0;
+#endif
+
     std::cout << "alpha: ";
     std::cin >> this->alpha;
 
@@ -108,11 +112,13 @@ public:
 
     if (lambda2 < 0 && lambda3 < 0)
     {
-      return (1 - ExponencialFormula(R_A, alpha)) * ExponencialFormula(R_B, beta) * (1 - ExponencialFormula(S, gamma)) * RANGE_NORMALIZATION_CONSTANT;
+      EigenvaluesType retval = (1 - ExponencialFormula(R_A, alpha));// *ExponencialFormula(R_B, beta) * (1 - ExponencialFormula(S, gamma));
+
+      return retval * 1000;
     }
     else
     {
-      return 0;
+      return (float)0;
     }
   }
 
@@ -123,14 +129,16 @@ public:
   EigenvaluesType R_A;
   EigenvaluesType R_B;
   EigenvaluesType S;
+
+#if _DEBUG
+  EigenvaluesType max;
+#endif
 };
 
 template<typename PixelType = Constants::GlobalPixelType>
 class EigenValuesVesselnessVisitor : IEigenValuesFilterVisitor<PixelType>
 {
 public:
-
-  static const PixelType RANGE_NORMALIZATION_CONSTANT = 1000;
 
   void Initialize() override
   {
@@ -144,7 +152,7 @@ public:
 
   EigenvaluesType VesselnessFormula(EigenvaluesType alpha, EigenvaluesType lambda2)
   {
-    return exp(-((lambda2 * lambda2) / (2 * alpha * lambda2 * alpha * lambda2))) * RANGE_NORMALIZATION_CONSTANT;
+    return exp(-((lambda2 * lambda2) / (2 * alpha * lambda2 * alpha * lambda2))) * Constants::RANGE_NORMALIZATION_CONSTANT;
   }
 
   PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override

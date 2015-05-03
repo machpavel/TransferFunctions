@@ -12,7 +12,7 @@
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
 class ItkEigenValuesFilter :
-  public ItkImageFilter<Constants::GlobalPixelType, Dimension>
+  public ItkImageFilter<PixelType, Dimension>
 {
 public:
   typedef itk::SymmetricSecondRankTensor<float, Dimension > TensorType;
@@ -30,8 +30,8 @@ public:
   typedef itk::ImportImageFilter<EigenValuesType, Dimension> EigenValuesImportFilterType;
 
 
-  ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<>* serializer) : ItkImageFilter(image),
-    secondaryFilename(secondaryFilename), serializerToCopy(serializer)
+  ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<PixelType, Dimension>* serializer) : ItkImageFilter(image),
+    secondaryFilename(secondaryFilename), serializerToCopy(serializer), serializeEigenvaluesAtTheEnd(false)
   {
     this->InitializeEigenvalues();
   }
@@ -50,7 +50,7 @@ public:
 
       this->ComputeEigenvalues();
 
-      this->SerializeEigenvalues();
+      this->serializeEigenvaluesAtTheEnd = true;
     }
 
     std::cout << "Performing computes on eigenvalues" << std::endl;
@@ -73,11 +73,26 @@ public:
         outputImageIterator.Set(computedValue);
     }
 
+    if (this->serializeEigenvaluesAtTheEnd)
+    {
+      this->SerializeEigenvalues();
+    }
+
     return outputImage;
   }
 
   void SerializeEigenvalues()
   {
+    EigenValuesCollectionIteratorType eigenValuesIterator(this->eigenValuesPerVoxel, this->eigenValuesPerVoxel->GetRequestedRegion());
+    for (eigenValuesIterator.GoToBegin(); !eigenValuesIterator.IsAtEnd(); ++eigenValuesIterator)
+    {
+      EigenValuesType eigenValues = eigenValuesIterator.Get();
+      //eigenValues[0] = this->EncodeEigenvalue(eigenValues[0]);
+      //eigenValues[1] = this->EncodeEigenvalue(eigenValues[1]);
+      //eigenValues[2] = this->EncodeEigenvalue(eigenValues[2]);
+      eigenValuesIterator.Set(eigenValues);
+    }
+
     ImageDumpSerializer<EigenValuesType, Dimension> serializer(this->secondaryFilename);
 
     serializer.SetMinimums(this->serializerToCopy->GetMinimums());
@@ -187,6 +202,12 @@ private:
     this->eigenValuesPerVoxel = importer->GetOutput();
   }
 
+  float EncodeEigenvalue(float eigenvalue)
+  {
+    return eigenvalue >= 0 ? (eigenvalue * Constants::RANGE_NORMALIZATION_CONSTANT) :
+      (-eigenvalue * Constants::RANGE_NORMALIZATION_CONSTANT) + Constants::RANGE_NORMALIZATION_CONSTANT;
+  }
+
   void ComputeEigenVectors(HessianOutputTypePointer hessianOutput)
   {
     HessianIteratorType it(hessianOutput, hessianOutput->GetRequestedRegion());
@@ -204,9 +225,11 @@ private:
 
   EigenValuesFrangiVesselnessVisitor<PixelType> visitor;
 
-  ImageDumpSerializer<>* serializerToCopy;
+  ImageDumpSerializer<PixelType, Dimension>* serializerToCopy;
 
   std::string secondaryFilename;
+
+  bool serializeEigenvaluesAtTheEnd;
 };
 
 #endif // FILTERS_ITK_EIGEN_VALUES_FILTER_H_

@@ -7,7 +7,7 @@
 
 template<typename PixelType = unsigned int, unsigned int Dimension = 3>
 class ItkEigenValuesRaw :
-  public ItkImageFilter<Constants::GlobalPixelType, Dimension>
+  public ItkImageFilter<PixelType, Dimension>
 {
 public:
   typedef itk::SymmetricSecondRankTensor< float, Dimension > TensorType;
@@ -25,7 +25,7 @@ public:
   typedef itk::ImportImageFilter<EigenValuesType, Dimension> EigenValuesImportFilterType;
 
 
-  ItkEigenValuesRaw(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<>* serializer) : ItkImageFilter(image), serializer(secondaryFilename)
+  ItkEigenValuesRaw(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<PixelType, Dimension>* serializer) : ItkImageFilter(image), serializer(secondaryFilename)
   {
     this->InitializeEigenvalues();
 
@@ -51,6 +51,56 @@ public:
 
     std::cout << "computing eigenvalues at each point" << std::endl;
     this->LoadEigenVectors(hessianOutput);
+
+    /////////////////////// testing checker pattern
+    /*this->InitializeEigenvalues();
+
+    std::cout << "enter field size: ";
+    size_t fieldSize = 0;
+    std::cin >> fieldSize;
+
+    ImageType::RegionType region = this->eigenValuesPerVoxel->GetLargestPossibleRegion();
+    ImageType::SizeType size = region.GetSize();
+
+    size_t width = size[0];
+    size_t height = size[1];
+    size_t depth = size[2];
+    ImageType::IndexType initialPosition = region.GetIndex();
+
+    float valueA = 0;
+    std::cout << "enter first value: ";
+    std::cin >> valueA;
+
+    float valueB = 0;
+    std::cout << "enter second value: ";
+    std::cin >> valueB;
+
+    for (size_t z = initialPosition[2]; z < depth + initialPosition[2]; ++z)
+    {
+      for (size_t y = initialPosition[1]; y < height + initialPosition[1]; ++y)
+      {
+        for (size_t x = initialPosition[0]; x < width + initialPosition[0]; ++x)
+        {
+          itk::Image<PixelType, Dimension>::IndexType index;
+          index[0] = x;
+          index[1] = y;
+          index[2] = z;
+
+          size_t xFieldIndex = (x - initialPosition[0]) / fieldSize;
+          size_t yFieldIndex = (y - initialPosition[1]) / fieldSize;
+          size_t zFieldIndex = (z - initialPosition[2]) / fieldSize;
+
+          bool xEven = (xFieldIndex % 2) == 0;
+          bool yEven = (yFieldIndex % 2) == 0;
+          bool zEven = (zFieldIndex % 2) == 0;
+
+          EigenValuesType value(xEven ^ yEven ^ zEven ? valueA : valueB);
+          this->eigenValuesPerVoxel->SetPixel(index, value);
+        }
+      }
+    }*/
+
+    ///////////////////////
 
     this->serializer.SerializeImage(this->eigenValuesPerVoxel);
     this->serializer.CloseFile();

@@ -98,7 +98,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ITKBiasCorrection-4.8.lib;ITKBioCell-4.8.lib;ITKCommon-4.8.lib;ITKDICOMParser-4.8.lib;itkdouble-conversion-4.8.lib;ITKEXPAT-4.8.lib;ITKFEM-4.8.lib;itkgdcmCommon-4.8.lib;itkgdcmDICT-4.8.lib;itkgdcmDSED-4.8.lib;itkgdcmIOD-4.8.lib;itkgdcmjpeg12-4.8.lib;itkgdcmjpeg16-4.8.lib;itkgdcmjpeg8-4.8.lib;itkgdcmMSFF-4.8.lib;ITKgiftiio-4.8.lib;itkhdf5_cpp-4.8.lib;itkhdf5-4.8.lib;ITKIOBioRad-4.8.lib;ITKIOBMP-4.8.lib;ITKIOCSV-4.8.lib;ITKIOGDCM-4.8.lib;ITKIOGE-4.8.lib;ITKIOGIPL-4.8.lib;ITKIOHDF5-4.8.lib;ITKIOImageBase-4.8.lib;ITKIOIPL-4.8.lib;ITKIOJPEG-4.8.lib;ITKIOLSM-4.8.lib;ITKIOMesh-4.8.lib;ITKIOMeta-4.8.lib;ITKIOMRC-4.8.lib;ITKIONIFTI-4.8.lib;ITKIONRRD-4.8.lib;ITKIOPNG-4.8.lib;ITKIOSiemens-4.8.lib;ITKIOSpatialObjects-4.8.lib;ITKIOStimulate-4.8.lib;ITKIOTIFF-4.8.lib;ITKIOTransformBase-4.8.lib;ITKIOTransformHDF5-4.8.lib;ITKIOTransformInsightLegacy-4.8.lib;ITKIOTransformMatlab-4.8.lib;ITKIOVTK-4.8.lib;ITKIOXML-4.8.lib;itkjpeg-4.8.lib;ITKKLMRegionGrowing-4.8.lib;ITKLabelMap-4.8.lib;ITKMesh-4.8.lib;ITKMetaIO-4.8.lib;itkNetlibSlatec-4.8.lib;ITKniftiio-4.8.lib;ITKNrrdIO-4.8.lib;itkopenjpeg-4.8.lib;ITKOptimizers-4.8.lib;ITKOptimizersv4-4.8.lib;ITKPath-4.8.lib;itkpng-4.8.lib;ITKPolynomials-4.8.lib;ITKQuadEdgeMesh-4.8.lib;ITKSpatialObjects-4.8.lib;ITKStatistics-4.8.lib;itksys-4.8.lib;itktiff-4.8.lib;itkv3p_lsqr-4.8.lib;itkv3p_netlib-4.8.lib;itkvcl-4.8.lib;ITKVideoCore-4.8.lib;ITKVideoIO-4.8.lib;itkvnl_algo-4.8.lib;itkvnl-4.8.lib;ITKVNLInstantiation-4.8.lib;ITKVTK-4.8.lib;ITKWatersheds-4.8.lib;itkzlib-4.8.lib;ITKznz-4.8.lib;wsock32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ITKBiasCorrection-4.8d.lib;ITKBioCell-4.8d.lib;ITKCommon-4.8d.lib;ITKDICOMParser-4.8d.lib;itkdouble-conversion-4.8d.lib;ITKEXPAT-4.8d.lib;ITKFEM-4.8d.lib;itkgdcmCommon-4.8d.lib;itkgdcmDICT-4.8d.lib;itkgdcmDSED-4.8d.lib;itkgdcmIOD-4.8d.lib;itkgdcmjpeg12-4.8d.lib;itkgdcmjpeg16-4.8d.lib;itkgdcmjpeg8-4.8d.lib;itkgdcmMSFF-4.8d.lib;ITKgiftiio-4.8d.lib;itkhdf5_cpp-4.8d.lib;itkhdf5-4.8d.lib;ITKIOBioRad-4.8d.lib;ITKIOBMP-4.8d.lib;ITKIOCSV-4.8d.lib;ITKIOGDCM-4.8d.lib;ITKIOGE-4.8d.lib;ITKIOGIPL-4.8d.lib;ITKIOHDF5-4.8d.lib;ITKIOImageBase-4.8d.lib;ITKIOIPL-4.8d.lib;ITKIOJPEG-4.8d.lib;ITKIOLSM-4.8d.lib;ITKIOMesh-4.8d.lib;ITKIOMeta-4.8d.lib;ITKIOMRC-4.8d.lib;ITKIONIFTI-4.8d.lib;ITKIONRRD-4.8d.lib;ITKIOPNG-4.8d.lib;ITKIOSiemens-4.8d.lib;ITKIOSpatialObjects-4.8d.lib;ITKIOStimulate-4.8d.lib;ITKIOTIFF-4.8d.lib;ITKIOTransformBase-4.8d.lib;ITKIOTransformHDF5-4.8d.lib;ITKIOTransformInsightLegacy-4.8d.lib;ITKIOTransformMatlab-4.8d.lib;ITKIOVTK-4.8d.lib;ITKIOXML-4.8d.lib;itkjpeg-4.8d.lib;ITKKLMRegionGrowing-4.8d.lib;ITKLabelMap-4.8d.lib;ITKMesh-4.8d.lib;ITKMetaIO-4.8d.lib;itkNetlibSlatec-4.8d.lib;ITKniftiio-4.8d.lib;ITKNrrdIO-4.8d.lib;itkopenjpeg-4.8d.lib;ITKOptimizers-4.8d.lib;ITKOptimizersv4-4.8d.lib;ITKPath-4.8d.lib;itkpng-4.8d.lib;ITKPolynomials-4.8d.lib;ITKQuadEdgeMesh-4.8d.lib;ITKSpatialObjects-4.8d.lib;ITKStatistics-4.8d.lib;itksys-4.8d.lib;itktiff-4.8d.lib;itkv3p_lsqr-4.8d.lib;itkv3p_netlib-4.8d.lib;itkvcl-4.8d.lib;ITKVideoCore-4.8d.lib;ITKVideoIO-4.8d.lib;itkvnl_algo-4.8d.lib;itkvnl-4.8d.lib;ITKVNLInstantiation-4.8d.lib;ITKVTK-4.8d.lib;ITKWatersheds-4.8d.lib;itkzlib-4.8d.lib;ITKznz-4.8d.lib;wsock32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -123,7 +123,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -138,12 +138,18 @@
     <ClInclude Include="DicomImport.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="FileWriter.h" />
+    <ClInclude Include="Filters\ArtificialObjectsFilter.h" />
+    <ClInclude Include="Filters\ItkGaussianFilter.h" />
+    <ClInclude Include="Filters\ItkCannyFilter.h" />
+    <ClInclude Include="Filters\CheckerFilter.h" />
     <ClInclude Include="Filters\FilterDecision.h" />
     <ClInclude Include="Filters\IEigenValuesFilterVisitor.h" />
     <ClInclude Include="Filters\ItkCroppingFilter.h" />
     <ClInclude Include="Filters\ItkEigenValuesFilter.h" />
     <ClInclude Include="Filters\ItkGradientFilter.h" />
     <ClInclude Include="Filters\ItkHessianToVesselnessFilter.h" />
+    <ClInclude Include="Filters\ItkLoGFilter.h" />
+    <ClInclude Include="Filters\ItkSobelFilter.h" />
     <ClInclude Include="ImageDumpBase.h" />
     <ClInclude Include="ImageDumpDeserializer.h" />
     <ClInclude Include="ImageDumpSerializer.h" />

@@ -17,6 +17,8 @@ public:
   static const unsigned int ELEMENT_ID_UNSIGNED_INT = 4;
   static const unsigned int DATASET_TYPE = 10;
 
+  static const GlobalPixelType RANGE_NORMALIZATION_CONSTANT = 1000;
+
   typedef itk::Vector<float, 3> EigenValuesType;
 };
 

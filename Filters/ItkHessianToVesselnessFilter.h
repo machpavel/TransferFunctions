@@ -4,13 +4,16 @@
 #include "../ItkImageFilter.h"
 #include "../Constants.h"
 
+#include <itkRescaleIntensityImageFilter.h>
+
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
 
 class ItkHessianToVesselnessFilter :
-  public ItkImageFilter<Constants::GlobalPixelType, Dimension>
+  public ItkImageFilter<PixelType, Dimension>
 {
 public:
   typedef itk::SymmetricSecondRankTensor< double, 3 > TensorType;
+  typedef itk::RescaleIntensityImageFilter<ImageType, ImageType> RescaleFilterType;
   typedef itk::Image<TensorType, 3> HessianOutputType;
   typedef itk::HessianRecursiveGaussianImageFilter<typename ItkImageFilter::ImageType, HessianOutputType> HessianFilterType;
   typedef itk::Hessian3DToVesselnessMeasureImageFilter<PixelType> VesselnessMeasureFilterType;
@@ -74,7 +77,15 @@ private:
     vesselnessFilter->SetAlpha2(alpha2);
     vesselnessFilter->Update();
 
-    return vesselnessFilter->GetOutput();
+
+    // remap values
+    RescaleFilterType::Pointer rescale = RescaleFilterType::New();
+    rescale->SetInput(vesselnessFilter->GetOutput());
+    rescale->SetOutputMinimum(0);
+    rescale->SetOutputMaximum(1000);
+    rescale->Update();
+
+    return rescale->GetOutput();
   }
 };
 

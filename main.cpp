@@ -46,16 +46,16 @@ int main(int argc, char * argv[])
   {
     if ((vm.count("loadDicom") == 0))
     {
-      typedef Constants::GlobalPixelType PixelType;
+      typedef unsigned short PixelType;
       const unsigned int Dimension = 3;
       typedef itk::Image<PixelType, Dimension> ImageType;
       typedef itk::ImportImageFilter< PixelType, Dimension >   ImportFilterType;
 
 
-      ImageDumpDeserializer<> *deserializer = new ImageDumpDeserializer<>(vm["input"].as<std::string>());
+      ImageDumpDeserializer<PixelType, Dimension> *deserializer = new ImageDumpDeserializer<PixelType, Dimension>(vm["input"].as<std::string>());
       ImageType::Pointer image = deserializer->DeserializeImage();
 
-      ImageDumpSerializer<> *serializer = new ImageDumpSerializer<>(vm["output"].as<std::string>());
+      ImageDumpSerializer<PixelType, Dimension> *serializer = new ImageDumpSerializer<PixelType, Dimension>(vm["output"].as<std::string>());
       serializer->SetMinimums(deserializer->GetMinimums());
       serializer->SetMaximums(deserializer->GetMaximums());
       serializer->SetElementExtents(deserializer->GetElementExtents());
