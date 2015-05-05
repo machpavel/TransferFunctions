@@ -5,10 +5,10 @@ template<typename PixelType = Constants::GlobalPixelType>
 class IEigenValuesFilterVisitor
 {
 public:
-  typedef double EigenvaluesType;
+  typedef float EigenvaluesType;
 
   virtual void Initialize() = 0;
-  virtual PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) = 0;
+  virtual EigenvaluesType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) = 0;
 
   void SortEigenValuesAbsoluteValue(EigenvaluesType& lambda1, EigenvaluesType& lambda2, EigenvaluesType& lambda3)
   {
@@ -62,7 +62,7 @@ public:
     std::cout << std::endl;
   }
 
-  PixelType Visit(PixelType lambda1, PixelType lambda2, PixelType lambda3) override
+  EigenvaluesType Visit(PixelType lambda1, PixelType lambda2, PixelType lambda3) override
   {
     return this->lambda1*lambda1 + this->lambda2*lambda2 + this->lambda3*lambda3;
   }
@@ -102,7 +102,7 @@ public:
     return exp(-((a*a) / (2*b*b)));
   }
 
-  PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
+  EigenvaluesType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
   {
     this->SortEigenValuesAbsoluteValue(lambda1, lambda2, lambda3);
 
@@ -112,9 +112,9 @@ public:
 
     if (lambda2 < 0 && lambda3 < 0)
     {
-      EigenvaluesType retval = (1 - ExponencialFormula(R_A, alpha));// *ExponencialFormula(R_B, beta) * (1 - ExponencialFormula(S, gamma));
+      EigenvaluesType retval = (1 - ExponencialFormula(R_A, alpha)) *ExponencialFormula(R_B, beta) * (1 - ExponencialFormula(S, gamma));
 
-      return retval * 1000;
+      return retval;
     }
     else
     {
@@ -155,7 +155,7 @@ public:
     return exp(-((lambda2 * lambda2) / (2 * alpha * lambda2 * alpha * lambda2))) * Constants::RANGE_NORMALIZATION_CONSTANT;
   }
 
-  PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
+  EigenvaluesType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
   {
     // based on: http://www.spl.harvard.edu/archive/spl-pre2007/pages/papers/yoshi/node3.html
 
@@ -193,7 +193,7 @@ public:
   {
   }
 
-  PixelType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
+  EigenvaluesType Visit(EigenvaluesType lambda1, EigenvaluesType lambda2, EigenvaluesType lambda3) override
   {
     this->SortEigenValuesAbsoluteValue(lambda1, lambda2, lambda3);
 

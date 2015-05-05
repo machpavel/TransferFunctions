@@ -9,6 +9,7 @@
 #include <itkImageDuplicator.h>
 
 #include <boost/filesystem.hpp>
+#include <itkRescaleIntensityImageFilter.h>
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
 class ItkEigenValuesFilter :
@@ -28,6 +29,8 @@ public:
   typedef itk::ImageRegionIterator<EigenValuesCollectionType> EigenValuesCollectionIteratorType;
 
   typedef itk::ImportImageFilter<EigenValuesType, Dimension> EigenValuesImportFilterType;
+
+  typedef itk::RescaleIntensityImageFilter<ImageType, ImageType> RescaleFilterType;
 
 
   ItkEigenValuesFilter(typename ItkImageFilter::ImagePointer image, std::string secondaryFilename, ImageDumpSerializer<PixelType, Dimension>* serializer) : ItkImageFilter(image),
@@ -69,8 +72,8 @@ public:
     for (outputImageIterator.GoToBegin(); !outputImageIterator.IsAtEnd(); ++eigenValuesIterator, ++outputImageIterator)
     {
       EigenValuesType eigenValues = eigenValuesIterator.Get();
-      PixelType computedValue = this->visitor.Visit(eigenValues[0], eigenValues[1], eigenValues[2]);
-        outputImageIterator.Set(computedValue);
+      float computedValue = this->visitor.Visit(eigenValues[0], eigenValues[1], eigenValues[2]);
+        outputImageIterator.Set(computedValue*1000);
     }
 
     if (this->serializeEigenvaluesAtTheEnd)
@@ -78,7 +81,13 @@ public:
       this->SerializeEigenvalues();
     }
 
-    return outputImage;
+    RescaleFilterType::Pointer rescale = RescaleFilterType::New();
+    rescale->SetInput(outputImage);
+    rescale->SetOutputMinimum(0);
+    rescale->SetOutputMaximum(1000);
+    rescale->Update();
+
+    return rescale->GetOutput();
   }
 
   void SerializeEigenvalues()

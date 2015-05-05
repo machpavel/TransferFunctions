@@ -158,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileReader.cpp" />
+    <ClInclude Include="Filters\ItkHessianDeterminant.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClCompile Include="ImageDumpBase.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

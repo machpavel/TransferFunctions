@@ -13,6 +13,7 @@
 #include "ItkSobelFilter.h"
 #include "CheckerFilter.h"
 #include "ArtificialObjectsFilter.h"
+#include "ItkHessianDeterminant.h"
 #include "../ImageDumpSerializer.h"
 
 template<typename PixelType = Constants::GlobalPixelType, unsigned int Dimension = 3>
@@ -39,6 +40,10 @@ public:
     else if (filterName == "hessian to vesselness")
     {
       return new ItkHessianToVesselnessFilter<PixelType, Dimension>(image);
+    }
+    else if (filterName == "hessian to determinant")
+    {
+      return new ItkHessianDeterminantFilter<PixelType, Dimension>(image);
     }
     else if (filterName == "hessian to eigenvalues")
     {
@@ -82,7 +87,9 @@ public:
   static void PrintFilterNames()
   {
     std::cout << "gradient" << std::endl;
+    std::cout << "gaussian" << std::endl;
     std::cout << "hessian to vesselness" << std::endl;
+    std::cout << "hessian to determinant" << std::endl;
     std::cout << "hessian to eigenvalues" << std::endl;
     std::cout << "hessian to raw eigenvalues" << std::endl;
     std::cout << "cropping" << std::endl;
