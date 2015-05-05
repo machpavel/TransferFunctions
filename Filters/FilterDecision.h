@@ -93,6 +93,11 @@ public:
     std::cout << "hessian to eigenvalues" << std::endl;
     std::cout << "hessian to raw eigenvalues" << std::endl;
     std::cout << "cropping" << std::endl;
+    std::cout << "LoG" << std::endl;
+    std::cout << "canny" << std::endl;
+    std::cout << "sobel" << std::endl;
+    std::cout << "checker" << std::endl;
+    std::cout << "artificial" << std::endl;
   }
 };
 
